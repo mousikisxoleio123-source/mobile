@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Πίκολο - Πληροφορίες & Κουίζ</title>
+    <style>
+        :root {
+            --primary: #5c7cfa;
+            --accent: #ff922b;
+            --bg-start: #eef2ff;
+            --bg-end: #e0e7ff;
+            --text-main: #2c3e50;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --dynamic-font-size: 1.1rem;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5);
+            font-size: var(--dynamic-font-size);
+        }
+
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .right-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .font-switcher {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 5px 12px;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .font-btn {
+            padding: 5px 10px;
+            border: 1px solid #000;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .font-btn:hover { background: #000; color: #fff; }
+
+        .speak-btn-round {
+            width: 45px;
+            height: 45px;
+            background: #fff;
+            border: 1px solid #000;
+            color: #000;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .speak-btn-round:hover {
+            background: #000;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            border-bottom: 3px solid #dee2e6;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 2em;
+        }
+
+        .tabs-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 12px 28px;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: 0.3s;
+            background: white;
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(92, 124, 250, 0.3);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-item {
+            background: white;
+            margin-bottom: 15px;
+            padding: 1.2em;
+            border-left: 6px solid var(--accent);
+            border-radius: 12px;
+            line-height: 1.6;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .info-item b { 
+            color: var(--primary); 
+            display: block; 
+            margin-bottom: 0.5em; 
+            font-size: 1.2em; 
+        }
+
+        .qa-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .qa-card {
+            background: #f8faff;
+            padding: 1.2em;
+            border-radius: 15px;
+            border: 1px solid #e0e7ff;
+        }
+
+        .question { 
+            font-weight: bold; 
+            color: var(--primary); 
+            margin-bottom: 0.5em; 
+            font-size: 1.1em; 
+        }
+
+        .answer { 
+            color: #495057; 
+            line-height: 1.5; 
+            border-top: 1px dashed #ced4da; 
+            padding-top: 10px; 
+        }
+
+        .back-home {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="controls-bar">
+            <button class="back-home" onclick="window.close()">✖ Κλείσιμο & Επιστροφή</button>
+            
+            <div class="right-controls">
+                <div class="font-switcher">
+                    <button class="font-btn" onclick="updateFont(1.1)">Α</button>
+                    <button class="font-btn" onclick="updateFont(1.4)" style="font-size: 1.2em;">Α</button>
+                    <button class="font-btn" onclick="updateFont(1.8)" style="font-size: 1.4em;">Α</button>
+                </div>
+                <button class="speak-btn-round" title="Αυτόματη Αφήγηση" onclick="handleSpeak()">🔊</button>
+            </div>
+        </div>
+
+        <h1>Πίκολο</h1>
+
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="openTab(event, 'info-tab')">Πληροφορίες</button>
+            <button class="tab-btn" onclick="openTab(event, 'quiz-tab')">Ερωτήσεις & Απαντήσεις</button>
+        </div>
+
+        <div id="info-tab" class="content-section active">
+            <div id="info-content">
+                <div class="info-item"><b>Το «μικρό αδελφάκι»</b> Το όνομά του στα ιταλικά σημαίνει ακριβώς αυτό: «μικρό». Είναι το μικρότερο μέλος της οικογένειας των φλάουτων.</div>
+                <div class="info-item"><b>Μέγεθος και Ύψος</b> Έχει το μισό μέγεθος από ένα κανονικό φλάουτο (περίπου 32 εκατοστά) και παίζει μία οκτάβα πιο ψηλά, έχοντας πολύ οξύ και λαμπερό ήχο.</div>
+                <div class="info-item"><b>Διαπεραστικός Ήχος</b> Ο ήχος του είναι τόσο δυνατός που ακούγεται καθαρά ακόμα και πάνω από μια ολόκληρη ορχήστρα! Συχνά μιμείται το κελάηδισμα των πουλιών ή τον άνεμο.</div>
+                <div class="info-item"><b>Προστασία Ακοής</b> Επειδή παίζει σε πολύ υψηλές συχνότητες και με μεγάλη ένταση, οι μουσικοί που μελετούν πίκολο χρησιμοποιούν συχνά ωτασπίδες για να προστατεύουν τα αυτιά τους.</div>
+                <div class="info-item"><b>Υλικά Κατασκευής</b> Μπορεί να είναι φτιαγμένο από ξύλο (γρεναδίλλα), μέταλλο ή ακόμα και πλαστικό για τους αρχάριους μουσικούς.</div>
+            </div>
+        </div>
+
+        <div id="quiz-tab" class="content-section">
+            <div id="quiz-content" class="qa-grid">
+                <div class="qa-card"><div class="question">1. Τι σημαίνει η λέξη «πίκολο»;</div><div class="answer">Η λέξη προέρχεται από τα ιταλικά και σημαίνει «μικρό».</div></div>
+                <div class="qa-card"><div class="question">2. Είναι το πίκολο το ίδιο με το φλάουτο;</div><div class="answer">Μοιάζουν πολύ, αλλά το πίκολο είναι το «μικρό αδελφάκι» του φλάουτου και παίζει πολύ πιο ψηλά.</div></div>
+                <div class="qa-card"><div class="question">3. Πόσο μεγάλο είναι ένα πίκολο;</div><div class="answer">Είναι περίπου το μισό μέγεθος από το κανονικό φλάουτο, δηλαδή έχει μήκος γύρω στα 32 εκατοστά.</div></div>
+                <div class="qa-card"><div class="question">4. Πώς το κρατάμε για να παίξουμε;</div><div class="answer">Το κρατάμε πλάγια (οριζόντια) και φυσάμε πάνω από μια τρύπα στην κεφαλή του, όπως στο φλάουτο.</div></div>
+                <div class="qa-card"><div class="question">5. Γιατί ο ήχος του είναι τόσο ψηλός;</div><div class="answer">Επειδή είναι μικρό όργανο, ο ήχος που βγάζει είναι μία οκτάβα ψηλότερος από αυτόν του φλάουτου.</div></div>
+                <div class="qa-card"><div class="question">6. Από τι υλικά είναι φτιαγμένο;</div><div class="answer">Από ξύλο (γρεναδίλλα), από μέταλλο (ασήμι) ή ακόμα και από πλαστικό.</div></div>
+                <div class="qa-card"><div class="question">7. Πού μπορούμε να ακούσουμε ένα πίκολο;</div><div class="answer">Σε μεγάλες ορχήστρες, σε στρατιωτικές μπάντες παρελάσεων και σε συναυλίες.</div></div>
+                <div class="qa-card"><div class="question">8. Ποια είναι η πιο χαμηλή νότα που μπορεί να παίξει;</div><div class="answer">Σε αντίθεση με το φλάουτο, το πίκολο δεν έχει μακριά ουρά, οπότε η χαμηλότερη νότα του είναι συνήθως το Ρε.</div></div>
+                <div class="qa-card"><div class="question">9. Ποιος διάσημος μουσικός το χρησιμοποίησε πρώτος σε ορχήστρα;</div><div class="answer">Ο Μπετόβεν ήταν από τους πρώτους, στην 5η Συμφωνία του το 1809.</div></div>
+                <div class="qa-card"><div class="question">10. Υπάρχει κάποιο πολύ γνωστό τραγούδι όπου το πίκολο πρωταγωνιστεί;</div><div class="answer">Ναι! Το εμβατήριο "The Stars and Stripes Forever" του John Philip Sousa έχει ένα διάσημο σόλο για πίκολο.</div></div>
+                <div class="qa-card"><div class="question">11. Γιατί οι μουσικοί φοράνε μερικές φορές ωτασπίδες;</div><div class="answer">Επειδή το πίκολο βγάζει πολύ δυνατές και ψηλές φωνές που μπορεί να κουράσουν ή να πονέσουν τα αυτιά στη μελέτη.</div></div>
+                <div class="qa-card"><div class="question">12. Μπορείς να κρυφτείς όταν παίζεις πίκολο σε μια μπάντα;</div><div class="answer">Όχι! Ο ήχος του είναι τόσο δυνατός και ξεχωριστός που ακούγεται πάντα πάνω από όλα τα άλλα όργανα.</div></div>
+                <div class="qa-card"><div class="question">13. Πώς πρέπει να το φροντίζουμε;</div><div class="answer">Πρέπει να το στεγνώνουμε εσωτερικά με ένα ειδικό πανάκι μετά από κάθε χρήση για να παραμένει καθαρό.</div></div>
+                <div class="qa-card"><div class="question">14. Είναι δύσκολο να μάθει κανείς πίκολο;</div><div class="answer">Το πιο δύσκολο είναι το «κούρδισμα», το να παίζεις τις νότες ακριβώς στον σωστό τόνο χωρίς να ακούγονται παράτονα.</div></div>
+                <div class="qa-card"><div class="question">15. Χρησιμοποιούμε τα ίδια δάχτυλα όπως στο φλάουτο;</div><div class="answer">Ναι, οι βασικές κινήσεις των δαχτύλων για τις νότες είναι σχεδόν ίδιες και στα δύο όργανα.</div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, content, tablinks;
+            content = document.getElementsByClassName("content-section");
+            for (i = 0; i < content.length; i++) {
+                content[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            window.speechSynthesis.cancel();
+        }
+
+        function updateFont(size) {
+            document.documentElement.style.setProperty('--dynamic-font-size', size + 'rem');
+        }
+
+        function handleSpeak() {
+            const synth = window.speechSynthesis;
+            if (synth.speaking) {
+                synth.cancel();
+                return;
+            }
+
+            const activeTab = document.querySelector('.content-section.active');
+            const textToSpeak = activeTab.innerText;
+            const utterThis = new SpeechSynthesisUtterance(textToSpeak);
+            utterThis.lang = 'el-GR';
+
+            const voices = synth.getVoices();
+            let greekVoice = voices.find(v => (v.lang.includes('el')) && (v.name.includes('Google') || v.name.includes('Female') || v.name.includes('Στέφανος') || v.name.includes('Melina')));
+            
+            if (greekVoice) utterThis.voice = greekVoice;
+            utterThis.pitch = 1.0;
+            utterThis.rate = 0.9;
+
+            synth.speak(utterThis);
+        }
+
+        window.speechSynthesis.onvoiceschanged = function() {
+            window.speechSynthesis.getVoices();
+        };
+    </script>
+</body>
+</html>

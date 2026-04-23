@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Πιάνο - Πληροφορίες & Κουίζ</title>
+    <style>
+        :root {
+            --primary: #5c7cfa;
+            --accent: #ff922b;
+            --bg-start: #eef2ff;
+            --bg-end: #e0e7ff;
+            --text-main: #2c3e50;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --dynamic-font-size: 1.1rem;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5);
+            font-size: var(--dynamic-font-size);
+        }
+
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .right-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .font-switcher {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 5px 12px;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .font-btn {
+            padding: 5px 10px;
+            border: 1px solid #000;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .font-btn:hover { background: #000; color: #fff; }
+
+        .speak-btn-round {
+            width: 45px;
+            height: 45px;
+            background: #fff;
+            border: 1px solid #000;
+            color: #000;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .speak-btn-round:hover {
+            background: #000;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            border-bottom: 3px solid #dee2e6;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 2em;
+        }
+
+        .tabs-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 12px 28px;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: 0.3s;
+            background: white;
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(92, 124, 250, 0.3);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-item {
+            background: white;
+            margin-bottom: 15px;
+            padding: 1.2em;
+            border-left: 6px solid var(--accent);
+            border-radius: 12px;
+            line-height: 1.6;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .info-item b { 
+            color: var(--primary); 
+            display: block; 
+            margin-bottom: 0.5em; 
+            font-size: 1.2em; 
+        }
+
+        .qa-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .qa-card {
+            background: #f8faff;
+            padding: 1.2em;
+            border-radius: 15px;
+            border: 1px solid #e0e7ff;
+        }
+
+        .question { 
+            font-weight: bold; 
+            color: var(--primary); 
+            margin-bottom: 0.5em; 
+            font-size: 1.1em; 
+        }
+
+        .answer { 
+            color: #495057; 
+            line-height: 1.5; 
+            border-top: 1px dashed #ced4da; 
+            padding-top: 10px; 
+        }
+
+        .back-home {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="controls-bar">
+            <button class="back-home" onclick="window.close()">✖ Κλείσιμο & Επιστροφή</button>
+            
+            <div class="right-controls">
+                <div class="font-switcher">
+                    <button class="font-btn" onclick="updateFont(1.1)">Α</button>
+                    <button class="font-btn" onclick="updateFont(1.4)" style="font-size: 1.2em;">Α</button>
+                    <button class="font-btn" onclick="updateFont(1.8)" style="font-size: 1.4em;">Α</button>
+                </div>
+                <button class="speak-btn-round" title="Αυτόματη Αφήγηση" onclick="handleSpeak()">🔊</button>
+            </div>
+        </div>
+
+        <h1>Πιάνο</h1>
+
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="openTab(event, 'info-tab')">Πληροφορίες</button>
+            <button class="tab-btn" onclick="openTab(event, 'quiz-tab')">Ερωτήσεις & Απαντήσεις</button>
+        </div>
+
+        <div id="info-tab" class="content-section active">
+            <div id="info-content">
+                <div class="info-item"><b>Η Εφεύρεση</b> Εφευρέθηκε στην Ιταλία γύρω στο 1700 από τον Μπαρτολομέο Κριστοφόρι. Το πλήρες όνομά του ήταν "πιανοφόρτε" (σιγανά-δυνατά).</div>
+                <div class="info-item"><b>Ο Μηχανισμός</b> Παρόλο που έχει πλήκτρα, είναι και κρουστό και έγχορδο. Όταν πατάς ένα πλήκτρο, ένα σφυράκι χτυπάει μια μεταλλική χορδή και την κάνει να δονείται.</div>
+                <div class="info-item"><b>Τα Πλήκτρα</b> Ένα κανονικό πιάνο έχει 88 πλήκτρα. Τα λευκά είναι οι βασικές νότες και τα μαύρα είναι οι αλλοιώσεις (διέσεις και υφέσεις).</div>
+                <div class="info-item"><b>Τα Πεντάλ</b> Στα πόδια του πιανίστα υπάρχουν πεντάλ που βοηθούν τον ήχο να κρατάει περισσότερο ή να γίνεται πιο γλυκός.</div>
+                <div class="info-item"><b>Είδη Πιάνου</b> Υπάρχει το πιάνο με ουρά (για μεγάλες συναυλίες) και το όρθιο πιάνο που πιάνει λιγότερο χώρο στα σπίτια.</div>
+            </div>
+        </div>
+
+        <div id="quiz-tab" class="content-section">
+            <div id="quiz-content" class="qa-grid">
+                <div class="qa-card"><div class="question">1. Ποιος εφηύρε το πρώτο πιάνο;</div><div class="answer">Ο Μπαρτολομέο Κριστοφόρι από την Ιταλία, γύρω στο έτος 1700.</div></div>
+                <div class="qa-card"><div class="question">2. Γιατί το λέμε «πιάνο» ενώ το πρώτο του όνομα ήταν μεγαλύτερο;</div><div class="answer">Το αρχικό του όνομα ήταν «πιανοφόρτε», που σημαίνει σιγανά-δυνατά. Με τα χρόνια το συντομεύσαμε σε «πιάνο».</div></div>
+                <div class="qa-card"><div class="question">3. Πόσα πλήκτρα έχει ένα κανονικό πιάνο;</div><div class="answer">Τα περισσότερα πιάνα έχουν 88 πλήκτρα (52 λευκά και 36 μαύρα).</div></div>
+                <div class="qa-card"><div class="question">4. Το πιάνο είναι έγχορδο ή κρουστό όργανο;</div><div class="answer">Είναι και τα δύο! Έχει χορδές (έγχορδο), αλλά για να ακουστούν πρέπει να τις χτυπήσουν μικρά σφυράκια (κρουστό).</div></div>
+                <div class="qa-card"><div class="question">5. Από τι είναι φτιαγμένα τα πλήκτρα του πιάνου σήμερα;</div><div class="answer">Σήμερα φτιάχνονται από ξύλο καλυμμένο με πλαστικό. Παλαιότερα χρησιμοποιούσαν ελεφαντόδοντο.</div></div>
+                <div class="qa-card"><div class="question">6. Τι κάνουν τα πεντάλ που πατάμε με τα πόδια;</div><div class="answer">Το δεξί πεντάλ κάνει τον ήχο να κρατάει περισσότερο, ενώ το αριστερό τον κάνει πιο σιγανό και γλυκό.</div></div>
+                <div class="qa-card"><div class="question">7. Γιατί υπάρχουν μαύρα πλήκτρα ανάμεσα στα λευκά;</div><div class="answer">Βοηθούν τον πιανίστα να βρίσκει τις νότες εύκολα και χρησιμεύουν για τις «αλλοιώσεις».</div></div>
+                <div class="qa-card"><div class="question">8. Πώς λέγεται το πιάνο που έχει σχήμα σαν «φτερό»;</div><div class="answer">Λέγεται πιάνο με ουρά και χρησιμοποιείται κυρίως σε μεγάλες συναυλίες.</div></div>
+                <div class="qa-card"><div class="question">9. Πώς λέγεται το πιάνο που είναι ψηλό και το βάζουμε στους τοίχους;</div><div class="answer">Λέγεται όρθιο πιάνο και πιάνει λιγότερο χώρο.</div></div>
+                <div class="qa-card"><div class="question">10. Πόσες χορδές έχει περίπου ένα πιάνο;</div><div class="answer">Έχει πάνω από 200 χορδές, γιατί για κάθε πλήκτρο συνήθως χτυπιούνται δύο ή τρεις χορδές μαζί.</div></div>
+                <div class="qa-card"><div class="question">11. Ποιο παιδί-θαύμα έπαιζε πιάνο από 4 ετών;</div><div class="answer">Ο Βόλφγκανγκ Αμαντέους Μότσαρτ.</div></div>
+                <div class="qa-card"><div class="question">12. Χρειάζεται το πιάνο «κούρδισμα»;</div><div class="answer">Ναι, ειδικοί τεχνικοί σφίγγουν τις χορδές ώστε κάθε πλήκτρο να ακούγεται στη σωστή νότα.</div></div>
+                <div class="qa-card"><div class="question">13. Μπορεί ένα πιάνο να παίξει μόνο του;</div><div class="answer">Ναι, υπάρχουν «αυτόματα» πιάνα ή ηλεκτρικά που παίζουν ηχογραφημένα τραγούδια.</div></div>
+                <div class="qa-card"><div class="question">14. Ποιο είναι το πιο ακριβό πιάνο στον κόσμο;</div><div class="answer">Το "Crystal Piano" που είναι φτιαγμένο από κρύσταλλο.</div></div>
+                <div class="qa-card"><div class="question">15. Γιατί είναι καλό να μαθαίνει ένα παιδί πιάνο;</div><div class="answer">Βοηθά στη συγκέντρωση, γυμνάζει τα δάχτυλα και διδάσκει την έκφραση συναισθημάτων.</div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, content, tablinks;
+            content = document.getElementsByClassName("content-section");
+            for (i = 0; i < content.length; i++) {
+                content[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            window.speechSynthesis.cancel();
+        }
+
+        function updateFont(size) {
+            document.documentElement.style.setProperty('--dynamic-font-size', size + 'rem');
+        }
+
+        function handleSpeak() {
+            const synth = window.speechSynthesis;
+            if (synth.speaking) {
+                synth.cancel();
+                return;
+            }
+
+            const activeTab = document.querySelector('.content-section.active');
+            const textToSpeak = activeTab.innerText;
+            const utterThis = new SpeechSynthesisUtterance(textToSpeak);
+            utterThis.lang = 'el-GR';
+
+            const voices = synth.getVoices();
+            let greekVoice = voices.find(v => (v.lang.includes('el')) && (v.name.includes('Google') || v.name.includes('Female') || v.name.includes('Στέφανος') || v.name.includes('Melina')));
+            
+            if (greekVoice) utterThis.voice = greekVoice;
+            utterThis.pitch = 1.0;
+            utterThis.rate = 0.9;
+
+            synth.speak(utterThis);
+        }
+
+        window.speechSynthesis.onvoiceschanged = function() {
+            window.speechSynthesis.getVoices();
+        };
+    </script>
+</body>
+</html>

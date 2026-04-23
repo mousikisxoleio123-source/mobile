@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ξυλόφωνο - Πληροφορίες & Κουίζ</title>
+    <style>
+        :root {
+            --primary: #5c7cfa;
+            --accent: #ff922b;
+            --bg-start: #eef2ff;
+            --bg-end: #e0e7ff;
+            --text-main: #2c3e50;
+            --card-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            border-bottom: 3px solid #dee2e6;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 12px 28px;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: 0.3s;
+            background: white;
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(92, 124, 250, 0.3);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; opacity: 1; transform: translateY(0); }
+        }
+
+        .info-item {
+            background: white;
+            margin-bottom: 15px;
+            padding: 20px;
+            border-left: 6px solid var(--accent);
+            border-radius: 12px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .info-item b { 
+            color: var(--primary); 
+            display: block; 
+            margin-bottom: 8px; 
+            font-size: 1.2rem; 
+        }
+
+        .qa-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .qa-card {
+            background: #f8faff;
+            padding: 18px;
+            border-radius: 15px;
+            border: 1px solid #e0e7ff;
+        }
+
+        .question { 
+            font-weight: bold; 
+            color: var(--primary); 
+            margin-bottom: 10px; 
+            font-size: 1.05rem; 
+        }
+
+        .answer { 
+            color: #495057; 
+            line-height: 1.5; 
+            border-top: 1px dashed #ced4da; 
+            padding-top: 10px; 
+        }
+
+        .back-home {
+            margin-bottom: 20px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="back-home" onclick="window.close()">✖ Κλείσιμο & Επιστροφή</button>
+
+    <div class="container">
+        <h1>Ξυλόφωνο</h1>
+
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="openTab(event, 'info-tab')">Πληροφορίες</button>
+            <button class="tab-btn" onclick="openTab(event, 'quiz-tab')">Ερωτήσεις & Απαντήσεις</button>
+        </div>
+
+        <div id="info-tab" class="content-section active">
+            <div class="info-item"><b>Ήχος από ξύλο</b> Το όνομά του προέρχεται από τις ελληνικές λέξεις «ξύλο» και «φωνή». Ανήκει στην οικογένεια των κρουστών οργάνων.</div>
+            <div class="info-item"><b>Κατασκευή και Λειτουργία</b> Αποτελείται από ξύλινες πλάκες διαφορετικού μήκους, τις οποίες χτυπάμε με ειδικά μπαστουνάκια που ονομάζονται μπαγκέτες. Κάθε μήκος πλάκας αντιστοιχεί σε μια διαφορετική νότα.</div>
+            <div class="info-item"><b>Διάταξη Πιάνου</b> Οι πλάκες του είναι τοποθετημένες στη σειρά, ακριβώς όπως τα πλήκτρα ενός πιάνου, γεγονός που βοηθά τον μουσικό να βρίσκει εύκολα τις νότες.</div>
+            <div class="info-item"><b>Ενίσχυση Ήχου</b> Κάτω από κάθε πλάκα υπάρχουν μεταλλικοί σωλήνες (αντηχεία) που βοηθούν τον ήχο να ακούγεται πιο δυνατά και να έχει μεγαλύτερη διάρκεια.</div>
+            <div class="info-item"><b>Ιδιαίτερος Χαρακτήρας</b> Ο ήχος του είναι ξερός και κοφτός. Πολλοί συνθέτες τον χρησιμοποιούν μεταφορικά για να μιμηθούν τον ήχο από κόκαλα σκελετού που τρίζουν!</div>
+        </div>
+
+        <div id="quiz-tab" class="content-section">
+            <div class="qa-grid">
+                <div class="qa-card"><div class="question">1. Τι σημαίνει το όνομα «ξυλόφωνο»;</div><div class="answer">Το όνομά του προέρχεται από τις ελληνικές λέξεις «ξύλο» και «φωνή», που σημαίνει «ήχος από ξύλο».</div></div>
+                <div class="qa-card"><div class="question">2. Σε ποια οικογένεια μουσικών οργάνων ανήκει;</div><div class="answer">Ανήκει στην οικογένεια των κρουστών οργάνων.</div></div>
+                <div class="qa-card"><div class="question">3. Από τι είναι φτιαγμένες οι πλάκες του;</div><div class="answer">Οι πλάκες κατασκευάζονται από σκληρό ξύλο, όπως η τριανταφυλλιά, ή από ειδικά συνθετικά υλικά.</div></div>
+                <div class="qa-card"><div class="question">4. Πώς είναι τοποθετημένες οι πλάκες πάνω στο όργανο;</div><div class="answer">Είναι τοποθετημένες στη σειρά, ακριβώς όπως τα πλήκτρα ενός πιάνου.</div></div>
+                <div class="qa-card"><div class="question">5. Με τι χτυπάμε τις πλάκες για να βγάλουν ήχο;</div><div class="answer">Χρησιμοποιούμε ειδικά μπαστουνάκια που ονομάζονται μπαγκέτες.</div></div>
+                <div class="qa-card"><div class="question">6. Πώς λέγονται οι σωλήνες που κρέμονται κάτω από τις πλάκες;</div><div class="answer">Αυτοί οι σωλήνες ονομάζονται αντηχεία.</div></div>
+                <div class="qa-card"><div class="question">7. Τι δουλειά κάνουν τα αντηχεία;</div><div class="answer">Βοηθούν τον ήχο να ακούγεται πιο δυνατά και να διαρκεί περισσότερο.</div></div>
+                <div class="qa-card"><div class="question">8. Τι είδους ήχο έχει το ξυλόφωνο;</div><div class="answer">Ο ήχος του είναι λαμπερός, κοφτός και διαπεραστικός.</div></div>
+                <div class="qa-card"><div class="question">9. Τι προσπαθούν να μιμηθούν οι μουσικοί με τον ήχο του;</div><div class="answer">Συχνά τον χρησιμοποιούν για να μιμηθούν τον ήχο από κόκαλα σκελετού που τρίζουν.</div></div>
+                <div class="qa-card"><div class="question">10. Από πού ξεκίνησε το ξυλόφωνο;</div><div class="answer">Οι ρίζες του βρίσκονται στην Αφρική και την Ασία.</div></div>
+                <div class="qa-card"><div class="question">11. Γιατί οι πλάκες έχουν διαφορετικά μεγέθη;</div><div class="answer">Επειδή κάθε μήκος πλάκας βγάζει και μια διαφορετική μουσική νότα.</div></div>
+                <div class="qa-card"><div class="question">12. Μπορούμε να παίζουμε ξυλόφωνο στη βροχή;</div><div class="answer">Όχι, γιατί η υγρασία μπορεί να καταστρέψει το ξύλο και να αλλάξει τον ήχο του.</div></div>
+                <div class="qa-card"><div class="question">13. Πώς πρέπει να καθαρίζουμε τις πλάκες;</div><div class="answer">Πρέπει να τις σκουπίζουμε απαλά με ένα στεγνό και μαλακό πανί.</div></div>
+                <div class="qa-card"><div class="question">14. Είναι μεγαλύτερο ή μικρότερο από τη μαρίμπα;</div><div class="answer">Το ξυλόφωνο είναι μικρότερο και έχει πιο ψηλό ήχο σε σχέση με τη μαρίμπα.</div></div>
+                <div class="qa-card"><div class="question">15. Πόσες μπαγκέτες χρησιμοποιεί ένας παίκτης;</div><div class="answer">Συνήθως χρησιμοποιεί δύο, αλλά οι έμπειροι παίκτες μπορούν να κρατούν μέχρι και τέσσερις.</div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, content, tablinks;
+            content = document.getElementsByClassName("content-section");
+            for (i = 0; i < content.length; i++) {
+                content[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>

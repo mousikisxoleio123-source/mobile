@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Κλαρινέτο - Πληροφορίες & Κουίζ</title>
+    <style>
+        :root {
+            --primary: #5c7cfa;
+            --accent: #ff922b;
+            --bg-start: #eef2ff;
+            --bg-end: #e0e7ff;
+            --text-main: #2c3e50;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            /* Δυναμικό μέγεθος γραμματοσειράς */
+            --dynamic-font-size: 1.1rem;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5);
+            /* Εφαρμογή δυναμικού μεγέθους */
+            font-size: var(--dynamic-font-size);
+        }
+
+        /* Μπάρα ελέγχου */
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .right-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .font-switcher {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 5px 12px;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .font-btn {
+            padding: 5px 10px;
+            border: 1px solid #000;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .font-btn:hover { background: #000; color: #fff; }
+
+        .speak-btn-round {
+            width: 45px;
+            height: 45px;
+            background: #fff;
+            border: 1px solid #000;
+            color: #000;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .speak-btn-round:hover {
+            background: #000;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            border-bottom: 3px solid #dee2e6;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 2em;
+        }
+
+        .tabs-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 12px 28px;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: 0.3s;
+            background: white;
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(92, 124, 250, 0.3);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-item {
+            background: white;
+            margin-bottom: 15px;
+            padding: 1.2em;
+            border-left: 6px solid var(--accent);
+            border-radius: 12px;
+            line-height: 1.6;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .info-item b { 
+            color: var(--primary); 
+            display: block; 
+            margin-bottom: 0.5em; 
+            font-size: 1.2em; 
+        }
+
+        .qa-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .qa-card {
+            background: #f8faff;
+            padding: 1.2em;
+            border-radius: 15px;
+            border: 1px solid #e0e7ff;
+        }
+
+        .question { 
+            font-weight: bold; 
+            color: var(--primary); 
+            margin-bottom: 0.5em; 
+            font-size: 1.1em; 
+        }
+
+        .answer { 
+            color: #495057; 
+            line-height: 1.5; 
+            border-top: 1px dashed #ced4da; 
+            padding-top: 10px; 
+        }
+
+        .back-home {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="controls-bar">
+            <button class="back-home" onclick="window.close()">✖ Κλείσιμο & Επιστροφή</button>
+            
+            <div class="right-controls">
+                <div class="font-switcher">
+                    <button class="font-btn" onclick="updateFont(1.1)">Α</button>
+                    <button class="font-btn" onclick="updateFont(1.4)" style="font-size: 1.2em;">Α</button>
+                    <button class="font-btn" onclick="updateFont(1.8)" style="font-size: 1.4em;">Α</button>
+                </div>
+                <button class="speak-btn-round" title="Αυτόματη Αφήγηση" onclick="handleSpeak()">🔊</button>
+            </div>
+        </div>
+
+        <h1>Κλαρινέτο</h1>
+
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="openTab(event, 'info-tab')">Πληροφορίες</button>
+            <button class="tab-btn" onclick="openTab(event, 'quiz-tab')">Ερωτήσεις & Απαντήσεις</button>
+        </div>
+
+        <div id="info-tab" class="content-section active">
+            <div id="info-content">
+                <div class="info-item"><b>Οικογένεια Ξύλινων Πνευστών</b> Το κλαρινέτο είναι ένα πνευστό όργανο που βγάζει ήχο όταν φυσάμε στο επιστόμιο, όπου δονείται ένα λεπτό καλάμι.</div>
+                <div class="info-item"><b>Προέλευση και Όνομα</b> Το εφηύρε ο Johann Christian Denner στη Γερμανία γύρω στο 1690. Το όνομά του σημαίνει «μικρή τρομπέτα».</div>
+                <div class="info-item"><b>Μεγάλη Μουσική Έκταση</b> Έχει πολύ μεγάλη «φωνή», αφού μπορεί να παίξει από πολύ χαμηλές μέχρι πολύ ψηλές νότες χρησιμοποιώντας τις τρύπες και τα μεταλλικά του κλειδιά.</div>
+                <div class="info-item"><b>Πρωταγωνιστής της Μουσικής</b> Ο Μότσαρτ ήταν μεγάλος θαυμαστής του, ενώ σήμερα είναι ο μεγάλος «πρωταγωνιστής» στην Τζαζ μουσική.</div>
+                <div class="info-item"><b>Κατασκευή</b> Συνήθως φτιάχνεται από σκούρο ξύλο εβένου ή από ανθεκτικό πλαστικό για τους μαθητές.</div>
+            </div>
+        </div>
+
+        <div id="quiz-tab" class="content-section">
+            <div id="quiz-content" class="qa-grid">
+                <div class="qa-card"><div class="question">1. Τι είναι;</div><div class="answer">Είναι ένα πνευστό όργανο που ανήκει στην οικογένεια των ξύλινων πνευστών και χρησιμοποιεί ένα καλάμι.</div></div>
+                <div class="qa-card"><div class="question">2. Τι σημαίνει το όνομα;</div><div class="answer">Προέρχεται από μια λέξη που σημαίνει «μικρή τρομπέτα».</div></div>
+                <div class="qa-card"><div class="question">3. Ποιος το εφηύρε;</div><div class="answer">Ο Johann Christian Denner στη Γερμανία γύρω στο 1690.</div></div>
+                <div class="qa-card"><div class="question">4. Πώς βγάζει ήχο;</div><div class="answer">Φυσάμε στο επιστόμιο και η δόνηση από το καλάμι παράγει τον ήχο.</div></div>
+                <div class="qa-card"><div class="question">5. Τι είναι το καλάμι;</div><div class="answer">Είναι ένα λεπτό κομμάτι ξύλου (καλαμιά) που τοποθετείται στο επιστόμιο.</div></div>
+                <div class="qa-card"><div class="question">6. Από τι φτιάχνεται;</div><div class="answer">Συνήθως από ξύλο εβένου ή από πλαστικό.</div></div>
+                <div class="qa-card"><div class="question">7. Ποια είναι τα μέρη του;</div><div class="answer">Το επιστόμιο, το βαρελάκι, το πάνω και κάτω σώμα και η καμπάνα.</div></div>
+                <div class="qa-card"><div class="question">8. Σε τι χρησιμεύει η καμπάνα;</div><div class="answer">Βρίσκεται στο κάτω μέρος και βοηθάει στο να δυναμώνει ο ήχος.</div></div>
+                <div class="qa-card"><div class="question">9. Ποιος διάσημος συνθέτης το αγαπούσε;</div><div class="answer">Ο Wolfgang Amadeus Mozart ήταν ένας από τους μεγαλύτερους θαυμαστές του.</div></div>
+                <div class="qa-card"><div class="question">10. Πού το ακούμε συχνότερα;</div><div class="answer">Στην κλασική μουσική, στην Τζαζ, αλλά και στην παραδοσιακή μουσική.</div></div>
+                <div class="qa-card"><div class="question">11. Έχει πολλά μεγέθη;</div><div class="answer">Ναι, υπάρχει μια ολόκληρη οικογένεια από μικρά έως τεράστια κλαρινέτα.</div></div>
+                <div class="qa-card"><div class="question">12. Πώς πρέπει να καθόμαστε;</div><div class="answer">Με ίσια πλάτη, το κεφάλι ψηλά και τα πόδια σταθερά στο πάτωμα.</div></div>
+                <div class="qa-card"><div class="question">13. Τι κάνουμε στο καλάμι πριν παίξουμε;</div><div class="answer">Πρέπει να το βρέχουμε στο στόμα μας ώστε να μαλακώσει.</div></div>
+                <div class="qa-card"><div class="question">14. Υπάρχουν κλαρινέτα σε διαφορετικά μεγέθη;</div><div class="answer">Ναι, υπάρχουν πολλά, όπως το μικρό κλαρινέτο ή το μεγάλο μπάσο κλαρινέτο με τον βαθύ ήχο.</div></div>
+                <div class="qa-card"><div class="question">15. Ποια είναι η σωστή στάση σώματος;</div><div class="answer">Ίσια πλάτη, κεφάλι ψηλά και σταθερό πάτημα των ποδιών στο πάτωμα.</div></div>
+                <div class="qa-card"><div class="question">16. Γιατί βρέχουμε το καλάμι;</div><div class="answer">Για να μαλακώσει αρκετά ώστε να δονείται σωστά και να βγάζει καθαρό ήχο.</div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, content, tablinks;
+            content = document.getElementsByClassName("content-section");
+            for (i = 0; i < content.length; i++) {
+                content[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            window.speechSynthesis.cancel();
+        }
+
+        function updateFont(size) {
+            document.documentElement.style.setProperty('--dynamic-font-size', size + 'rem');
+        }
+
+        function handleSpeak() {
+            const synth = window.speechSynthesis;
+            if (synth.speaking) {
+                synth.cancel();
+                return;
+            }
+
+            const activeTab = document.querySelector('.content-section.active');
+            const textToSpeak = activeTab.innerText;
+            const utterThis = new SpeechSynthesisUtterance(textToSpeak);
+            utterThis.lang = 'el-GR';
+
+            const voices = synth.getVoices();
+            let femaleVoice = voices.find(v => (v.lang.includes('el')) && (v.name.includes('Google') || v.name.includes('Female') || v.name.includes('Στέφανος') || v.name.includes('Melina')));
+            
+            if (femaleVoice) utterThis.voice = femaleVoice;
+            utterThis.pitch = 1.2;
+            utterThis.rate = 0.9;
+
+            synth.speak(utterThis);
+        }
+
+        window.speechSynthesis.getVoices();
+    </script>
+</body>
+</html>

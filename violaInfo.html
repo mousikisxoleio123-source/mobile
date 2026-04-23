@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Βιόλα - Πληροφορίες & Ερωτήσεις</title>
+    <style>
+        :root {
+            --primary: #5c7cfa;
+            --accent: #ff922b;
+            --bg-start: #eef2ff;
+            --bg-end: #e0e7ff;
+            --text-main: #2c3e50;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --dynamic-font-size: 1.1rem;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5);
+            font-size: var(--dynamic-font-size);
+        }
+
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .right-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .font-switcher {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 5px 12px;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .font-btn {
+            padding: 5px 10px;
+            border: 1px solid #000;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .font-btn:hover { background: #000; color: #fff; }
+
+        .speak-btn-round {
+            width: 45px;
+            height: 45px;
+            background: #fff;
+            border: 1px solid #000;
+            color: #000;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: 0.3s;
+        }
+
+        .speak-btn-round:hover {
+            background: #000;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            border-bottom: 3px solid #dee2e6;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 12px 28px;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            background: white;
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(92, 124, 250, 0.3);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .content-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-item {
+            background: white;
+            margin-bottom: 15px;
+            padding: 20px;
+            border-left: 6px solid var(--accent);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            line-height: 1.6;
+        }
+
+        .info-item b { color: var(--primary); display: block; margin-bottom: 8px; font-size: 1.2rem; }
+
+        .qa-grid { display: grid; gap: 15px; }
+
+        .qa-card {
+            background: #f8faff;
+            padding: 18px;
+            border-radius: 15px;
+            border: 1px solid #e0e7ff;
+        }
+
+        .question { font-weight: bold; color: var(--primary); margin-bottom: 10px; }
+
+        .answer { color: #495057; border-top: 1px dashed #ced4da; padding-top: 10px; line-height: 1.5; }
+
+        .back-home {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="controls-bar">
+        <button class="back-home" onclick="window.close()">✖ Κλείσιμο & Επιστροφή</button>
+        
+        <div class="right-controls">
+            <div class="font-switcher">
+                <button class="font-btn" onclick="updateFont(1.1)">Α</button>
+                <button class="font-btn" onclick="updateFont(1.4)" style="font-size: 1.2em;">Α</button>
+                <button class="font-btn" onclick="updateFont(1.8)" style="font-size: 1.4em;">Α</button>
+            </div>
+            <button class="speak-btn-round" title="Αυτόματη Αφήγηση" onclick="handleSpeak()">🔊</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Βιόλα</h1>
+
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="openTab(event, 'info-tab')">Πληροφορίες</button>
+            <button class="tab-btn" onclick="openTab(event, 'qa-tab')">Ερωτήσεις & Απαντήσεις</button>
+        </div>
+
+        <div id="info-tab" class="content-section active">
+            <div class="info-item"><b>Είναι λίγο μεγαλύτερη</b> Αν βάλεις ένα βιολί και μια βιόλα δίπλα-δίπλα, θα δεις ότι η βιόλα είναι πιο πλατιά και λίγο πιο μακριά.</div>
+            <div class="info-item"><b>Έχει πιο «ζεστή» φωνή</b> Επειδή είναι μεγαλύτερη, ο ήχος της δεν είναι τόσο τσιριχτός όσο του βιολιού. Είναι πιο βαθύς, γλυκός και μελαγχολικός.</div>
+            <div class="info-item"><b>Έχει 4 χορδές</b> Όπως και το βιολί, έχει τέσσερις χορδές, αλλά οι δικές της είναι λίγο πιο χοντρές για να βγάζουν αυτόν τον μπάσο ήχο.</div>
+            <div class="info-item"><b>Κρατιέται στον ώμο</b> Παρόλο που είναι πιο βαριά από το βιολί, ο μουσικός τη στηρίζει κι αυτήν ανάμεσα στον ώμο και το πηγούνι του.</div>
+            <div class="info-item"><b>Το «μυστικό» της κλειδί</b> Οι βιολίστες διαβάζουν τις νότες τους σε ένα δικό τους, ειδικό σύμβολο που λέγεται «κλειδί της άλτο» ή αλλιώς το κλειδί Ντο. Σχεδόν κανένα άλλο όργανο δεν το χρησιμοποιεί!</div>
+            <div class="info-item"><b>Η καρδιά της ορχήστρας</b> Στην ορχήστρα, οι βιόλες κάθονται στη μέση. Είναι αυτές που «γεμίζουν» τη μουσική και ενώνουν τα ψηλά βιολιά με τα χαμηλά τσέλα.</div>
+            <div class="info-item"><b>Πιο βαρύ δοξάρι</b> Για να κουνηθούν οι χοντρές χορδές της, το δοξάρι της είναι λίγο πιο βαρύ από αυτό του βιολιού.</div>
+        </div>
+
+        <div id="qa-tab" class="content-section">
+            <div class="qa-grid">
+                <div class="qa-card"><div class="question">1. Ποιο όργανο είναι μεγαλύτερο, το βιολί ή η βιόλα;</div><div class="answer">Η βιόλα είναι μεγαλύτερη σε μέγεθος.</div></div>
+                <div class="qa-card"><div class="question">2. Πώς είναι ο ήχος της σε σχέση με το βιολί;</div><div class="answer">Είναι πιο βαθύς, ζεστός και μελαγχολικός.</div></div>
+                <div class="qa-card"><div class="question">3. Πού στηρίζει ο μουσικός τη βιόλα για να παίξει;</div><div class="answer">Την ακουμπά ανάμεσα στον ώμο και το πηγούνι του.</div></div>
+                <div class="qa-card"><div class="question">4. Πόσες χορδές έχει η βιόλα;</div><div class="answer">Έχει 4 χορδές.</div></div>
+                <div class="qa-card"><div class="question">5. Πώς λέγεται το ειδικό σύμβολο (κλειδί) που χρησιμοποιεί;</div><div class="answer">Λέγεται κλειδί της άλτο.</div></div>
+                <div class="qa-card"><div class="question">6. Σε ποια οικογένεια οργάνων ανήκει;</div><div class="answer">Ανήκει στην οικογένεια των τοξοτών εγχόρδων.</div></div>
+                <div class="qa-card"><div class="question">7. Πού κάθονται οι βιόλες μέσα στην ορχήστρα;</div><div class="answer">Κάθονται συνήθως στη μέση, ανάμεσα στα βιολιά και τα τσέλα.</div></div>
+                <div class="qa-card"><div class="question">8. Είναι το δοξάρι της πιο ελαφρύ ή πιο βαρύ από του βιολιού;</div><div class="answer">Είναι λίγο πιο βαρύ για να κουνάει τις χοντρές χορδές.</div></div>
+                <div class="qa-card"><div class="question">9. Μοιάζει η βιόλα στην εμφάνιση με το βιολί;</div><div class="answer">Ναι, μοιάζουν πολύ αλλά η βιόλα είναι πιο πλατιά.</div></div>
+                <div class="qa-card"><div class="question">10. Από τι υλικό είναι φτιαγμένο το σώμα της;</div><div class="answer">Είναι φτιαγμένο από ξύλο.</div></div>
+                <div class="qa-card"><div class="question">11. Τι έχει το δοξάρι της πάνω για να τρίβεται στις χορδές;</div><div class="answer">Έχει τρίχες από ουρά αλόγου.</div></div>
+                <div class="qa-card"><div class="question">12. Μπορούμε να παίξουμε με τα δάχτυλα (πιτσικάτο) στη βιόλα;</div><div class="answer">Ναι, μπορούμε να την παίξουμε και χωρίς δοξάρι.</div></div>
+                <div class="qa-card"><div class="question">13. Είναι πιο ελαφριά ή πιο βαριά από ένα βιολί;</div><div class="answer">Είναι πιο βαριά λόγω του μεγέθους της.</div></div>
+                <div class="qa-card"><div class="question">14. Τι βάζουμε στις τρίχες του δοξαριού για να μην γλιστρούν;</div><div class="answer">Βάζουμε ρετσίνι ή αλλιώς κολοφώνιο.</div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, content, tablinks;
+            content = document.getElementsByClassName("content-section");
+            for (i = 0; i < content.length; i++) content[i].classList.remove("active");
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) tablinks[i].classList.remove("active");
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            window.speechSynthesis.cancel();
+        }
+
+        function updateFont(size) {
+            document.documentElement.style.setProperty('--dynamic-font-size', size + 'rem');
+        }
+
+        function handleSpeak() {
+            const synth = window.speechSynthesis;
+            if (synth.speaking) {
+                synth.cancel();
+                return;
+            }
+            const activeTab = document.querySelector('.content-section.active');
+            const utterThis = new SpeechSynthesisUtterance(activeTab.innerText);
+            utterThis.lang = 'el-GR';
+            utterThis.rate = 0.9;
+            const voices = synth.getVoices();
+            let greekVoice = voices.find(v => (v.lang.includes('el')));
+            if (greekVoice) utterThis.voice = greekVoice;
+            synth.speak(utterThis);
+        }
+    </script>
+</body>
+</html>

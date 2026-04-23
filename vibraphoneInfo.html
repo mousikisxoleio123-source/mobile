@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Μεταλλόφωνο - Πληροφορίες & Ερωτήσεις</title>
+    <style>
+        :root {
+            --primary: #5c7cfa;
+            --accent: #ff922b;
+            --bg-start: #eef2ff;
+            --bg-end: #e0e7ff;
+            --text-main: #2c3e50;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --dynamic-font-size: 1.1rem;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5);
+            font-size: var(--dynamic-font-size);
+        }
+
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .right-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .font-switcher {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 5px 12px;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .font-btn {
+            padding: 5px 10px;
+            border: 1px solid #000;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .font-btn:hover { background: #000; color: #fff; }
+
+        .speak-btn-round {
+            width: 45px;
+            height: 45px;
+            background: #fff;
+            border: 1px solid #000;
+            color: #000;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: 0.3s;
+        }
+
+        .speak-btn-round:hover {
+            background: #000;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            border-bottom: 3px solid #dee2e6;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 12px 28px;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            background: white;
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(92, 124, 250, 0.3);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .content-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-item {
+            background: white;
+            margin-bottom: 15px;
+            padding: 20px;
+            border-left: 6px solid var(--accent);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            line-height: 1.6;
+        }
+
+        .info-item b { color: var(--primary); display: block; margin-bottom: 8px; font-size: 1.2rem; }
+
+        .qa-grid { display: grid; gap: 15px; }
+
+        .qa-card {
+            background: #f8faff;
+            padding: 18px;
+            border-radius: 15px;
+            border: 1px solid #e0e7ff;
+        }
+
+        .question { font-weight: bold; color: var(--primary); margin-bottom: 10px; }
+
+        .answer { color: #495057; border-top: 1px dashed #ced4da; padding-top: 10px; line-height: 1.5; }
+
+        .back-home {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="controls-bar">
+        <button class="back-home" onclick="window.close()">✖ Κλείσιμο & Επιστροφή</button>
+        
+        <div class="right-controls">
+            <div class="font-switcher">
+                <button class="font-btn" onclick="updateFont(1.1)">Α</button>
+                <button class="font-btn" onclick="updateFont(1.4)" style="font-size: 1.2em;">Α</button>
+                <button class="font-btn" onclick="updateFont(1.8)" style="font-size: 1.4em;">Α</button>
+            </div>
+            <button class="speak-btn-round" title="Αυτόματη Αφήγηση" onclick="handleSpeak()">🔊</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Μεταλλόφωνο</h1>
+
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="openTab(event, 'info-tab')">Πληροφορίες</button>
+            <button class="tab-btn" onclick="openTab(event, 'qa-tab')">Ερωτήσεις & Απαντήσεις</button>
+        </div>
+
+        <div id="info-tab" class="content-section active">
+            <div class="info-item"><b>Τι είναι το Μεταλλόφωνο;</b> Αποτελείται από σειρές μεταλλικών πλακών. Κάθε πλάκα έχει διαφορετικό μέγεθος και αντιστοιχεί σε μια νότα.</div>
+            <div class="info-item"><b>Οικογένεια Κρουστών</b> Ανήκει στα κρουστά γιατί ο ήχος παράγεται όταν χτυπάμε τις πλάκες με ειδικά ραβδάκια που λέγονται μπαγκέτες.</div>
+            <div class="info-item"><b>Κρυστάλλινος Ήχος</b> Ο ήχος του είναι λαμπερός και "κρυστάλλινος". Επειδή το μέταλλο δονείται για ώρα, ο ήχος κρατάει περισσότερο από ό,τι στο ξυλόφωνο.</div>
+            <div class="info-item"><b>Διάταξη Πιάνου</b> Οι πλάκες είναι τοποθετημένες όπως τα πλήκτρα του πιάνου. Οι μεγάλες πλάκες βγάζουν χαμηλές νότες και οι μικρές ψηλές.</div>
+            <div class="info-item"><b>Το "Γκλόκενσπιλ"</b> Έτσι ονομάζεται το μικρό μεταλλόφωνο που χρησιμοποιείται συχνά στις μεγάλες συμφωνικές ορχήστρες.</div>
+        </div>
+
+        <div id="qa-tab" class="content-section">
+            <div class="qa-grid">
+                <div class="qa-card"><div class="question">1. Γιατί λέγεται μεταλλόφωνο;</div><div class="answer">Γιατί η λέξη βγαίνει από το «μέταλλο» και το «φωνή» (ήχος), δηλαδή ο ήχος του μετάλλου.</div></div>
+                <div class="qa-card"><div class="question">2. Είναι το ίδιο με το ξυλόφωνο;</div><div class="answer">Όχι, το ξυλόφωνο έχει ξύλινες πλάκες και πιο σύντομο ήχο, ενώ το μεταλλόφωνο έχει πιο γλυκό και λαμπερό ήχο.</div></div>
+                <div class="qa-card"><div class="question">3. Με τι χτυπάμε τις πλάκες;</div><div class="answer">Τις χτυπάμε με τις «μπαγκέτες» που έχουν στην άκρη μια μπάλα από καουτσούκ, πλαστικό ή ξύλο.</div></div>
+                <div class="qa-card"><div class="question">4. Πώς αλλάζουν οι νότες;</div><div class="answer">Από το μέγεθος της πλάκας. Όσο πιο μεγάλη είναι η πλάκα, τόσο πιο χαμηλή (βαρύς ήχος) είναι η νότα.</div></div>
+                <div class="qa-card"><div class="question">5. Πού το βρίσκουμε συνήθως;</div><div class="answer">Είναι πολύ διαδεδομένο στα σχολεία και στις παιδικές ορχήστρες.</div></div>
+                <div class="qa-card"><div class="question">6. Πώς βγαίνει ο ήχος;</div><div class="answer">Όταν χτυπάμε την πλάκα, αυτή δονείται (τρέμει) πολύ γρήγορα και δημιουργεί τον ήχο.</div></div>
+                <div class="qa-card"><div class="question">7. Τι είναι το «Γκλόκενσπιλ» (Glockenspiel);</div><div class="answer">Είναι το γερμανικό όνομα για το μικρό μεταλλόφωνο της ορχήστρας.</div></div>
+                <div class="qa-card"><div class="question">8. Χρειάζεται να φυσάμε για να παίξουμε;</div><div class="answer">Όχι, δεν χρειάζεται καθόλου ανάσα, μόνο καλό συντονισμό στα χέρια.</div></div>
+                <div class="qa-card"><div class="question">9. Είναι βαρύ όργανο;</div><div class="answer">Τα σχολικά είναι ελαφριά, αλλά τα επαγγελματικά είναι μεγάλα και έχουν δική τους βάση με ρόδες.</div></div>
+                <div class="qa-card"><div class="question">10. Γιατί μερικά έχουν σωλήνες από κάτω;</div><div class="answer">Οι σωλήνες αυτοί λέγονται «αντηχεία» και κάνουν τον ήχο πιο δυνατό και γεμάτο.</div></div>
+                <div class="qa-card"><div class="question">11. Μπορούμε να παίξουμε πολλές νότες μαζί;</div><div class="answer">Ναι, ένας έμπειρος παίκτης μπορεί να κρατάει ακόμα και τέσσερις μπαγκέτες (δύο σε κάθε χέρι).</div></div>
+                <div class="qa-card"><div class="question">12. Χαλάει εύκολα;</div><div class="answer">Είναι πολύ ανθεκτικό επειδή το μέταλλο δεν σπάει εύκολα.</div></div>
+                <div class="qa-card"><div class="question">13. Πώς ξέρουμε ποια νότα παίζουμε;</div><div class="answer">Συχνά πάνω στις πλάκες είναι χαραγμένα τα γράμματα των νοτών (C, D, E...).</div></div>
+                <div class="qa-card"><div class="question">14. Σε τι χρώμα είναι οι πλάκες;</div><div class="answer">Συνήθως ασημένιες ή χρυσές, αλλά στα σχολικά μπορεί να είναι πολύχρωμες.</div></div>
+                <div class="qa-card"><div class="question">15. Τι μουσική μπορούμε να παίξουμε;</div><div class="answer">Τα πάντα: από παιδικά τραγούδια και κλασική μουσική μέχρι Jazz και ταινίες.</div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, content, tablinks;
+            content = document.getElementsByClassName("content-section");
+            for (i = 0; i < content.length; i++) content[i].classList.remove("active");
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) tablinks[i].classList.remove("active");
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            window.speechSynthesis.cancel();
+        }
+
+        function updateFont(size) {
+            document.documentElement.style.setProperty('--dynamic-font-size', size + 'rem');
+        }
+
+        function handleSpeak() {
+            const synth = window.speechSynthesis;
+            if (synth.speaking) {
+                synth.cancel();
+                return;
+            }
+            const activeTab = document.querySelector('.content-section.active');
+            const utterThis = new SpeechSynthesisUtterance(activeTab.innerText);
+            utterThis.lang = 'el-GR';
+            utterThis.rate = 0.9;
+            const voices = synth.getVoices();
+            let greekVoice = voices.find(v => (v.lang.includes('el')));
+            if (greekVoice) utterThis.voice = greekVoice;
+            synth.speak(utterThis);
+        }
+    </script>
+</body>
+</html>

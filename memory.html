@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Μουσικό Memory</title>
+    <style>
+        :root {
+            --primary-color: #3c5aa6;
+            --secondary-color: #e67e22; 
+            --word-color: #f1c40f;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh; 
+            overflow: hidden; 
+            box-sizing: border-box;
+            background-image: url('photos/unnamed.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .controls {
+            margin: 10px 0 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px; 
+            z-index: 10;
+            flex-wrap: wrap;
+        }
+
+        .memory-game {
+            flex: 1; 
+            width: 100%;
+            max-width: min(92vw, 75vh); 
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); 
+            grid-template-rows: repeat(4, 1fr);
+            gap: 12px;
+            perspective: 1000px;
+            padding-bottom: 20px;
+            align-content: center;
+        }
+
+        .memory-card {
+            width: 100%;
+            aspect-ratio: 1 / 1; 
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .memory-card.flip {
+            transform: rotateY(180deg);
+        }
+
+        .front-face, .back-face {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-size: 100% 100%; 
+            background-repeat: no-repeat;
+        }
+
+        .front-face {
+            background-image: url('photos/memory1.png');
+            transform: rotateY(180deg);
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        .instrument-img {
+            width: 75%; 
+            height: 75%;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+        .back-face {
+            background-image: url('photos/memory2.png');
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-back { background: var(--secondary-color); }
+        .btn-word { background: #8e44ad; }
+        
+        .btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <button class="btn btn-back" onclick="window.location.href='index.html?skipIntro=true'">
+            🏠 Αρχική
+        </button>
+        <button class="btn btn-word" onclick="window.location.href='wordmemory.html'">
+            📝 Word Memory
+        </button>
+        <button class="btn" onclick="resetGame()">Επανεκκίνηση 🔄</button>
+    </div>
+
+    <div class="memory-game" id="game-board"></div>
+
+    <script>
+        // Λίστα μόνο με τα ονόματα των αρχείων (εικόνες)
+        const allInstruments = [
+            'violin', 'viola', 'Cello', 'Clarinet', 'Contrabass', 
+            'Cymbal', 'English horn', 'fagotto', 'flute', 'Guitar', 
+            'Harp', 'Horn', 'oboe', 'Piano', 'piccolo', 'Timpani', 
+            'Trombone', 'Trumpet', 'tuba', 'vibraphone', 'Xylophone'
+        ];
+
+        let hasFlippedCard = false;
+        let lockBoard = false;
+        let firstCard, secondCard;
+        let matchCount = 0;
+
+        function createBoard() {
+            const board = document.getElementById('game-board');
+            // Ανακάτεμα όλης της λίστας και επιλογή 8 οργάνων
+            const shuffledFullList = [...allInstruments].sort(() => Math.random() - 0.5);
+            const selectedInstruments = shuffledFullList.slice(0, 8);
+            
+            // Δημιουργία ζευγαριών (2 κάρτες με την ίδια εικόνα για κάθε όργανο)
+            const deck = [...selectedInstruments, ...selectedInstruments];
+            deck.sort(() => Math.random() - 0.5);
+
+            board.innerHTML = '';
+            deck.forEach(name => {
+                const card = document.createElement('div');
+                card.classList.add('memory-card');
+                card.dataset.name = name;
+                
+                card.innerHTML = `
+                    <div class="front-face">
+                        <img src="photos/${name}.png" class="instrument-img">
+                    </div>
+                    <div class="back-face"></div>
+                `;
+                card.addEventListener('click', flipCard);
+                board.appendChild(card);
+            });
+        }
+
+        function flipCard() {
+            if (lockBoard) return;
+            if (this === firstCard) return;
+            this.classList.add('flip');
+            if (!hasFlippedCard) {
+                hasFlippedCard = true;
+                firstCard = this;
+                return;
+            }
+            secondCard = this;
+            checkForMatch();
+        }
+
+        function checkForMatch() {
+            let isMatch = firstCard.dataset.name === secondCard.dataset.name;
+            isMatch ? disableCards() : unflipCards();
+        }
+
+        function disableCards() {
+            matchCount++;
+            firstCard.removeEventListener('click', flipCard);
+            secondCard.removeEventListener('click', flipCard);
+            if (matchCount === 8) {
+                setTimeout(() => alert('Τέλεια! Βρήκες και τα 8 ζευγάρια!'), 500);
+            }
+            resetBoard();
+        }
+
+        function unflipCards() {
+            lockBoard = true;
+            setTimeout(() => {
+                firstCard.classList.remove('flip');
+                secondCard.classList.remove('flip');
+                resetBoard();
+            }, 1000);
+        }
+
+        function resetBoard() {
+            [hasFlippedCard, lockBoard] = [false, false];
+            [firstCard, secondCard] = [null, null];
+        }
+
+        function resetGame() {
+            matchCount = 0;
+            resetBoard();
+            createBoard();
+        }
+
+        window.onload = createBoard;
+    </script>
+</body>
+</html>
