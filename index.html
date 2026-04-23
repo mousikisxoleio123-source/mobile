@@ -3,27 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Όργανα Μουσικής - Πλήρης Εφαρμογή</title>
+    <title>Τα Όργανά μου</title>
     <style>
-        /* Βασικό στυλ για κινητά */
         body {
-            font-family: -apple-system, system-ui, sans-serif;
-            background-color: #f2f2f7;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-bottom: 30px;
         }
 
         header {
             background-color: #ffffff;
             width: 100%;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
-            box-shadow: 0 1px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
+            color: #1a2a6c;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -33,175 +32,191 @@
             width: 95%;
             max-width: 500px;
             margin-top: 20px;
+            padding-bottom: 50px;
         }
 
-        /* Κάρτες Οργάνων */
         .card {
-            background: white;
+            background-image: url('unnamed.jpg'); 
+            background-size: cover;
+            background-position: center;
             border-radius: 15px;
-            padding: 15px;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 15px;
+            height: 125px; 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+            border: 3px solid #b8860b; 
+            position: relative;
         }
 
-        .instrument-thumb {
-            width: 80px;
-            height: 80px;
+        .instrument-img-container {
+            width: 90px;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 10px;
-            object-fit: contain;
-            margin-right: 15px;
-            background-color: #f9f9f9;
-        }
-
-        .info-section {
-            flex-grow: 1;
-        }
-
-        .instrument-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #333;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .button-group {
+            border: 2px solid #b8860b; 
             display: flex;
-            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
-        .action-btn {
-            width: 35px;
-            height: 35px;
+        .instrument-img {
+            width: 85%;
+            height: 85%;
+            object-fit: contain;
+        }
+
+        .instrument-name {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #000;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+            padding: 0 10px;
+            text-transform: uppercase;
+        }
+
+        .button-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-icon {
+            width: 48px;
+            height: 48px;
             cursor: pointer;
-            transition: transform 0.2s;
+            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.6));
         }
 
-        .action-btn:active {
-            transform: scale(0.8);
-        }
-
-        /* Το "Παράθυρο" (Modal) για Βίντεο και Info */
+        /* MODAL - ΔΙΟΡΘΩΜΕΝΟ ΜΕΓΕΘΟΣ */
         .overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: none; /* Κρυφό αρχικά */
+            background: rgba(0,0,0,0.92);
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 2000;
-            padding: 10px;
         }
 
-        /* Το περιεχόμενο μέσα στο παράθυρο */
         .modal-content {
-            width: 100%;
-            max-width: 600px;
-            height: 80%;
-            background: white;
-            border-radius: 20px;
+            width: 90%;
+            max-width: 560px; /* Standard μέγεθος player */
+            background: black;
+            border-radius: 15px;
             overflow: hidden;
+            border: 2px solid #b8860b;
             display: flex;
             flex-direction: column;
         }
 
-        iframe {
-            width: 100%;
-            height: 100%;
+        /* Εδώ ρυθμίζουμε το βίντεο να έχει σωστή αναλογία 16:9 */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 ratio */
+            height: 0;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
             border: none;
         }
 
-        .close-bar {
-            background: #ff3b30;
+        .close-btn {
+            background: #cc0000;
             color: white;
             padding: 15px;
             text-align: center;
             font-weight: bold;
             cursor: pointer;
-            font-size: 1.1rem;
+            border-top: 1px solid #b8860b;
         }
     </style>
 </head>
 <body>
 
-    <header>Τα Όργανα της Ορχήστρας</header>
+    <header>Τα Όργανά μου</header>
 
-    <div class="container" id="app-container">
-        </div>
+    <div class="container" id="list"></div>
 
-    <div id="app-modal" class="overlay">
+    <div id="modal" class="overlay">
         <div class="modal-content">
-            <iframe id="modal-frame" src=""></iframe>
-            <div class="close-bar" onclick="closeModal()">✕ ΚΛΕΙΣΙΜΟ & ΕΠΙΣΤΡΟΦΗ</div>
+            <div class="video-wrapper">
+                <iframe id="frame" src="" allow="autoplay"></iframe>
+            </div>
+            <div class="close-btn" onclick="closeModal()">✕ ΕΠΙΣΤΡΟΦΗ</div>
         </div>
     </div>
 
     <script>
-        // Η λίστα με τα όργανα και τα IDs τους
         const instruments = {
-            'violin': { name: 'ΒΙΟΛΙ', driveId: "1kzjmLde-86Zva_bWZqNZto2Ry4aXgk6J" },
-            'viola':  { name: 'ΒΙΟΛΑ', driveId: "1Z05p9bGKMOALMWmb4twg-OEgu4rmqXhs" },
-            'Cello':  { name: 'ΤΣΕΛΟ', driveId: "1fOlgiCvh4QXYe7V246MI2TrlbTjy_B-S" },
-            'Clarinet':  { name: 'ΚΛΑΡΙΝΟ', driveId: "1H0VihbQDqQUbIT7m_d_3m8FtDf0FUIOe" },
-            'Contrabass':  { name: 'ΚΟΝΤΡΑΜΠΑΣΣΟ', driveId: "1Q5ajw5wOU82K4y7QrmJ7tWxt11z_cL6T" },
-            'Cymbal':  { name: 'ΠΙΑΤΑ', driveId: "1FeDzU6TGQckI0yfDCPL9iMIKUDUQWRYK" }, 
-            'English horn':  { name: 'ΑΓΓΛΙΚΟ ΚΟΡΝΟ', driveId: "1IiqjydfVwXec6B7FQIkWUKeWFqe034zK" },
-            'fagotto':  { name: 'ΦΑΓΚΟΤΟ', driveId: "1ji_oYvyiCucgGGplCiRrVk1iIBiGKZ3B" },
-            'flute':  { name: 'ΦΛΑΟΥΤΟ', driveId: "1j8VUgr_6yT1r9LNuhikU3xdQyY6CQSlo" },
-            'Guitar':  { name: 'ΚΙΘΑΡΑ', driveId: "1x2SMYe2e07NDRqASZJnEyWsqPToU_rMd" },
-            'Harp':  { name: 'ΑΡΠΑ', driveId: "1H-jcR5my918L-N3gnP16qh30TsnlWqXF" },
-            'Horn':  { name: 'ΚΟΡΝΟ', driveId: "1y0UgUz8bAbeB9B5FPDUwIVyVjd7_nHM8" },
-            'oboe':  { name: 'ΟΜΠΟΕ', driveId: "10qyZ_6DQbDOr58qieoXRWLC5ZQqwRCU8" },
-            'Piano':  { name: 'ΠΙΑΝΟ', driveId: "1liKGEwEef2T0HnnA_2gNBDk5RXv2wRo6" },
-            'piccolo':  { name: 'ΠΙΚΟΛΟ', driveId: "1ZN166lE-7VtXrxiYr79QtWjlRfYmm7b5" },
-            'Timpani':  { name: 'ΤΥΜΠΑΝΑ', driveId: "1v43FzwzAWSB9ThV1Pwpm6IF-pgjshsCw" },
-            'Trombone':  { name: 'ΤΡΟΜΠΟΝΙ', driveId: "1Nj0zE0M4WXs--FByF70HTeJxLzrQG-rd" },
-            'Trumpet':  { name: 'ΤΡΟΜΠΕΤΑ', driveId: "1sE-kqoF9pWeh0lmw7TQ5eiyPTMud0Wfg" },
-            'tuba':  { name: 'ΤΟΥΜΠΑ', driveId: "1vlyyyfIHO4GIHp60MlayHqR0ceg5cRj9" },
-            'vibraphone':  { name: 'ΜΕΤΑΛΛΟΦΩΝΟ', driveId: "1yy4Dq5K31ilVCx3rFK0GdPu8e7Q6Rvrq" },
-            'Xylophone':  { name: 'ΞΥΛΟΦΩΝΟ', driveId: "1Qw0NPoXu5JPJ8u2yhNrISTI7UVnDx48H" }
+            'violin': 'ΒΙΟΛΙ', 'viola': 'ΒΙΟΛΑ', 'Cello': 'ΤΣΕΛΟ',
+            'Clarinet': 'ΚΛΑΡΙΝΟ', 'Contrabass': 'ΚΟΝΤΡΑΜΠΑΣΣΟ',
+            'Cymbal': 'ΠΙΑΤΑ', 'English horn': 'ΑΓΓΛΙΚΟ ΚΟΡΝΟ',
+            'fagotto': 'ΦΑΓΚΟΤΟ', 'flute': 'ΦΛΑΟΥΤΟ', 'Guitar': 'ΚΙΘΑΡΑ',
+            'Harp': 'ΑΡΠΑ', 'Horn': 'ΚΟΡΝΟ', 'oboe': 'ΟΜΠΟΕ',
+            'Piano': 'ΠΙΑΝΟ', 'piccolo': 'ΠΙΚΟΛΟ', 'Timpani': 'ΤΥΜΠΑΝΑ',
+            'Trombone': 'ΤΡΟΜΠΟΝΙ', 'Trumpet': 'ΤΡΟΜΠΕΤΑ',
+            'tuba': 'ΤΟΥΜΠΑ', 'vibraphone': 'ΜΕΤΑΛΛΟΦΩΝΟ', 'Xylophone': 'ΞΥΛΟΦΩΝΟ'
         };
 
-        const appContainer = document.getElementById('app-container');
+        const driveIds = {
+            'violin': '1kzjmLde-86Zva_bWZqNZto2Ry4aXgk6J',
+            'viola': '1Z05p9bGKMOALMWmb4twg-OEgu4rmqXhs',
+            'Cello': '1fOlgiCvh4QXYe7V246MI2TrlbTjy_B-S',
+            'Clarinet': '1H0VihbQDqQUbIT7m_d_3m8FtDf0FUIOe',
+            'Contrabass': '1Q5ajw5wOU82K4y7QrmJ7tWxt11z_cL6T',
+            'Cymbal': '1FeDzU6TGQckI0yfDCPL9iMIKUDUQWRYK',
+            'English horn': '1IiqjydfVwXec6B7FQIkWUKeWFqe034zK',
+            'fagotto': '1ji_oYvyiCucgGGplCiRrVk1iIBiGKZ3B',
+            'flute': '1j8VUgr_6yT1r9LNuhikU3xdQyY6CQSlo',
+            'Guitar': '1x2SMYe2e07NDRqASZJnEyWsqPToU_rMd',
+            'Harp': '1H-jcR5my918L-N3gnP16qh30TsnlWqXF',
+            'Horn': '1y0UgUz8bAbeB9B5FPDUwIVyVjd7_nHM8',
+            'oboe': '10qyZ_6DQbDOr58qieoXRWLC5ZQqwRCU8',
+            'Piano': '1liKGEwEef2T0HnnA_2gNBDk5RXv2wRo6',
+            'piccolo': '1ZN166lE-7VtXrxiYr79QtWjlRfYmm7b5',
+            'Timpani': '1v43FzwzAWSB9ThV1Pwpm6IF-pgjshsCw',
+            'Trombone': '1Nj0zE0M4WXs--FByF70HTeJxLzrQG-rd',
+            'Trumpet': '1sE-kqoF9pWeh0lmw7TQ5eiyPTMud0Wfg',
+            'tuba': '1vlyyyfIHO4GIHp60MlayHqR0ceg5cRj9',
+            'vibraphone': '1yy4Dq5K31ilVCx3rFK0GdPu8e7Q6Rvrq',
+            'Xylophone': '1Qw0NPoXu5JPJ8u2yhNrISTI7UVnDx48H'
+        };
 
-        // Δημιουργία των καρτών
-        Object.keys(instruments).forEach(key => {
-            const data = instruments[key];
+        const listDiv = document.getElementById('list');
+
+        Object.keys(instruments).forEach(id => {
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
-                <img src="photos/${key}.png" class="instrument-thumb" onerror="this.src='https://via.placeholder.com/80?text=Instrument'">
-                <div class="info-section">
-                    <span class="instrument-title">${data.name}</span>
-                    <div class="button-group">
-                        <img src="photos/i.png" class="action-btn" onclick="openModal('${key}Info.html')">
-                        <img src="photos/play.png" class="action-btn" onclick="openModal('https://drive.google.com/file/d/${data.driveId}/preview')">
-                    </div>
+                <div class="instrument-img-container">
+                    <img src="photos/${id}.png" class="instrument-img" onerror="this.src='https://via.placeholder.com/90'">
+                </div>
+                <div class="instrument-name">${instruments[id]}</div>
+                <div class="button-column">
+                    <img src="photos/i.png" class="action-icon" onclick="openPopup('${id}Info.html')">
+                    <img src="photos/play.png" class="action-icon" onclick="openPopup('https://drive.google.com/file/d/${driveIds[id]}/preview')">
                 </div>
             `;
-            appContainer.appendChild(card);
+            listDiv.appendChild(card);
         });
 
-        // Άνοιγμα του παραθύρου (είτε για Info είτε για Video)
-        function openModal(url) {
-            const modal = document.getElementById('app-modal');
-            const frame = document.getElementById('modal-frame');
-            frame.src = url;
-            modal.style.display = 'flex';
-            // Εμποδίζουμε το σκρολάρισμα της πίσω σελίδας
+        function openPopup(url) {
+            document.getElementById('frame').src = url;
+            document.getElementById('modal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
 
-        // Κλείσιμο και καθαρισμός
         function closeModal() {
-            const modal = document.getElementById('app-modal');
-            const frame = document.getElementById('modal-frame');
-            frame.src = ""; // Σταματάμε το βίντεο ή το περιεχόμενο
-            modal.style.display = 'none';
-            // Επαναφέρουμε το σκρολάρισμα
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('frame').src = "";
             document.body.style.overflow = 'auto';
         }
     </script>
