@@ -60,6 +60,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
 
         .instrument-img {
@@ -83,59 +84,85 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            justify-content: center;
         }
 
         .action-icon {
             width: 48px;
             height: 48px;
             cursor: pointer;
+            transition: transform 0.1s;
             filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.6));
         }
 
-        /* MODAL - ΔΙΟΡΘΩΜΕΝΟ ΜΕΓΕΘΟΣ */
+        /* --- MODAL ΠΟΥ ΠΙΑΝΕΙ ΟΛΗ ΤΗΝ ΟΘΟΝΗ --- */
         .overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.92);
+            background: rgba(0,0,0,0.95);
             display: none;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start; /* Ξεκινάει από πάνω */
             z-index: 2000;
         }
 
         .modal-content {
-            width: 90%;
-            max-width: 560px; /* Standard μέγεθος player */
-            background: black;
-            border-radius: 15px;
-            overflow: hidden;
-            border: 2px solid #b8860b;
+            width: 100%; /* Full πλάτος στο κινητό */
+            height: 100%; /* Full ύψος */
+            background: white;
             display: flex;
             flex-direction: column;
-        }
-
-        /* Εδώ ρυθμίζουμε το βίντεο να έχει σωστή αναλογία 16:9 */
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 ratio */
-            height: 0;
-        }
-
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
             border: none;
+        }
+
+        /* --- TABS (ΕΤΙΚΕΤΕΣ) --- */
+        .tabs-header {
+            display: flex;
+            background: #1a2a6c;
+            width: 100%;
+            border-bottom: 3px solid #b8860b;
+        }
+
+        .tab-link {
+            flex: 1;
+            padding: 15px 5px;
+            color: white;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            text-transform: uppercase;
+        }
+
+        .tab-link.active {
+            background: #b8860b;
+            color: black;
+        }
+
+        /* --- ΠΕΡΙΕΧΟΜΕΝΟ --- */
+        .iframe-container {
+            flex-grow: 1;
+            width: 100%;
+            background: #fff;
+        }
+
+        iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
         }
 
         .close-btn {
             background: #cc0000;
             color: white;
-            padding: 15px;
+            padding: 20px;
             text-align: center;
             font-weight: bold;
             cursor: pointer;
-            border-top: 1px solid #b8860b;
+            font-size: 1.2rem;
+            text-transform: uppercase;
         }
     </style>
 </head>
@@ -147,10 +174,17 @@
 
     <div id="modal" class="overlay">
         <div class="modal-content">
-            <div class="video-wrapper">
-                <iframe id="frame" src="" allow="autoplay"></iframe>
+            <div class="tabs-header" id="modal-tabs">
+                <div class="tab-link active" onclick="changeTab(this, 'info')">Πληροφορίες</div>
+                <div class="tab-link" onclick="changeTab(this, 'qa')">Ερωτήσεις</div>
+                <div class="tab-link" onclick="changeTab(this, 'rep')">Ρεπερτόριο</div>
             </div>
-            <div class="close-btn" onclick="closeModal()">✕ ΕΠΙΣΤΡΟΦΗ</div>
+            
+            <div class="iframe-container">
+                <iframe id="frame" src=""></iframe>
+            </div>
+
+            <div class="close-btn" onclick="closeModal()">✕ ΚΛΕΙΣΙΜΟ</div>
         </div>
     </div>
 
@@ -190,6 +224,8 @@
             'Xylophone': '1Qw0NPoXu5JPJ8u2yhNrISTI7UVnDx48H'
         };
 
+        let currentInstrumentId = ""; // Κρατάμε ποιο όργανο είναι ανοιχτό
+
         const listDiv = document.getElementById('list');
 
         Object.keys(instruments).forEach(id => {
@@ -201,17 +237,43 @@
                 </div>
                 <div class="instrument-name">${instruments[id]}</div>
                 <div class="button-column">
-                    <img src="photos/i.png" class="action-icon" onclick="openPopup('${id}Info.html')">
-                    <img src="photos/play.png" class="action-icon" onclick="openPopup('https://drive.google.com/file/d/${driveIds[id]}/preview')">
+                    <img src="photos/i.png" class="action-icon" onclick="openPopup('${id}')">
+                    <img src="photos/play.png" class="action-icon" onclick="openVideo('${id}')">
                 </div>
             `;
             listDiv.appendChild(card);
         });
 
-        function openPopup(url) {
-            document.getElementById('frame').src = url;
+        function openPopup(id) {
+            currentInstrumentId = id;
+            document.getElementById('modal-tabs').style.display = 'flex'; // Δείξε τα tabs
+            // Reset στο πρώτο tab
+            const firstTab = document.querySelector('.tab-link');
+            changeTab(firstTab, 'info');
+            
             document.getElementById('modal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
+        }
+
+        function openVideo(id) {
+            document.getElementById('modal-tabs').style.display = 'none'; // Κρύψε τα tabs στο βίντεο
+            document.getElementById('frame').src = `https://drive.google.com/file/d/${driveIds[id]}/preview`;
+            document.getElementById('modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function changeTab(element, type) {
+            // Αλλαγή εμφάνισης κουμπιών
+            document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+
+            // Αλλαγή URL στο iframe ανάλογα με το tab
+            let url = "";
+            if(type === 'info') url = `${currentInstrumentId}Info.html`;
+            if(type === 'qa') url = `${currentInstrumentId}QA.html`;
+            if(type === 'rep') url = `${currentInstrumentId}Rep.html`;
+            
+            document.getElementById('frame').src = url;
         }
 
         function closeModal() {
