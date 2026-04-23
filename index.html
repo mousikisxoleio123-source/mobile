@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Όργανα Μουσικής</title>
+    <style>
+        /* Το "ντύσιμο" της εφαρμογής */
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            background-color: #f2f2f7;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            background-color: #ffffff;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 1px 10px rgba(0,0,0,0.1);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .container {
+            width: 90%;
+            max-width: 400px;
+            margin-top: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .card:active { transform: scale(0.95); }
+        .card img {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-right: 20px;
+            background-color: #eee;
+        }
+        .card span {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <header>Τα Όργανά μου</header>
+
+    <div class="container" id="app">
+        </div>
+
+    <script>
+        // Η λίστα με τις εικόνες σου
+        const photos = [
+            "Harp.png", "Horn.png", "oboe.png", "Piano.png", "piccolo.png"
+        ];
+
+        const container = document.getElementById('app');
+
+        photos.forEach(photo => {
+            const name = photo.split('.')[0]; // Παίρνει το όνομα χωρίς το .png
+            
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <img src="photos/${photo}" alt="${name}" onerror="this.src='https://via.placeholder.com/70?text=Error'">
+                <span>${name}</span>
+            `;
+            container.appendChild(card);
+        });
+    </script>
+</body>
+</html>
