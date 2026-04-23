@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Όργανα Μουσικής</title>
+    <title>Τα Όργανά μου</title>
     <style>
-        /* Το "ντύσιμο" της εφαρμογής */
         body {
             font-family: -apple-system, system-ui, sans-serif;
             background-color: #f2f2f7;
@@ -13,6 +12,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding-bottom: 40px;
         }
         header {
             background-color: #ffffff;
@@ -22,35 +22,81 @@
             box-shadow: 0 1px 10px rgba(0,0,0,0.1);
             font-weight: bold;
             font-size: 1.2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
         .container {
-            width: 90%;
-            max-width: 400px;
+            width: 95%;
+            max-width: 450px;
             margin-top: 20px;
         }
         .card {
             background: white;
             border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 15px;
+            padding: 12px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
         }
-        .card:active { transform: scale(0.95); }
-        .card img {
+        .instrument-img {
             width: 70px;
             height: 70px;
             border-radius: 10px;
-            object-fit: cover;
-            margin-right: 20px;
-            background-color: #eee;
+            object-fit: contain;
+            margin-right: 15px;
+            background: #f9f9f9;
         }
-        .card span {
+        .card-info {
+            flex-grow: 1;
+        }
+        .card-info span {
+            display: block;
             font-size: 1.1rem;
-            font-weight: 500;
-            color: #333;
+            font-weight: 600;
+            color: #1c1c1e;
+            margin-bottom: 8px;
+        }
+        .btn-row {
+            display: flex;
+            gap: 12px;
+        }
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .icon-btn:active { transform: scale(0.9); }
+
+        /* Video Modal Layer */
+        #video-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        #video-modal iframe {
+            width: 90%;
+            max-width: 560px;
+            aspect-ratio: 16/9;
+            border: none;
+            border-radius: 12px;
+        }
+        .close-modal {
+            margin-top: 20px;
+            background: #ff3b30;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -58,28 +104,73 @@
 
     <header>Τα Όργανά μου</header>
 
-    <div class="container" id="app">
+    <div class="container" id="instrument-list">
         </div>
 
+    <div id="video-modal">
+        <iframe id="player" src="" allow="autoplay"></iframe>
+        <button class="close-modal" onclick="closePlayer()">Κλείσιμο ✕</button>
+    </div>
+
     <script>
-        // Η λίστα με τις εικόνες σου
-        const photos = [
-            "Harp.png", "Horn.png", "oboe.png", "Piano.png", "piccolo.png"
-        ];
+        const instruments = {
+            'violin': { name: 'ΒΙΟΛΙ', driveId: "1kzjmLde-86Zva_bWZqNZto2Ry4aXgk6J" },
+            'viola':  { name: 'ΒΙΟΛΑ', driveId: "1Z05p9bGKMOALMWmb4twg-OEgu4rmqXhs" },
+            'Cello':  { name: 'ΤΣΕΛΟ', driveId: "1fOlgiCvh4QXYe7V246MI2TrlbTjy_B-S" },
+            'Clarinet':  { name: 'ΚΛΑΡΙΝΟ', driveId: "1H0VihbQDqQUbIT7m_d_3m8FtDf0FUIOe" },
+            'Contrabass':  { name: 'ΚΟΝΤΡΑΜΠΑΣΣΟ', driveId: "1Q5ajw5wOU82K4y7QrmJ7tWxt11z_cL6T" },
+            'Cymbal':  { name: 'ΠΙΑΤΑ', driveId: "1FeDzU6TGQckI0yfDCPL9iMIKUDUQWRYK" }, 
+            'English horn':  { name: 'ΑΓΓΛΙΚΟ ΚΟΡΝΟ', driveId: "1IiqjydfVwXec6B7FQIkWUKeWFqe034zK" },
+            'fagotto':  { name: 'ΦΑΓΚΟΤΟ', driveId: "1ji_oYvyiCucgGGplCiRrVk1iIBiGKZ3B" },
+            'flute':  { name: 'ΦΛΑΟΥΤΟ', driveId: "1j8VUgr_6yT1r9LNuhikU3xdQyY6CQSlo" },
+            'Guitar':  { name: 'ΚΙΘΑΡΑ', driveId: "1x2SMYe2e07NDRqASZJnEyWsqPToU_rMd" },
+            'Harp':  { name: 'ΑΡΠΑ', driveId: "1H-jcR5my918L-N3gnP16qh30TsnlWqXF" },
+            'Horn':  { name: 'ΚΟΡΝΟ', driveId: "1y0UgUz8bAbeB9B5FPDUwIVyVjd7_nHM8" },
+            'oboe':  { name: 'ΟΜΠΟΕ', driveId: "10qyZ_6DQbDOr58qieoXRWLC5ZQqwRCU8" },
+            'Piano':  { name: 'ΠΙΑΝΟ', driveId: "1liKGEwEef2T0HnnA_2gNBDk5RXv2wRo6" },
+            'piccolo':  { name: 'ΠΙΚΟΛΟ', driveId: "1ZN166lE-7VtXrxiYr79QtWjlRfYmm7b5" },
+            'Timpani':  { name: 'ΤΥΜΠΑΝΑ', driveId: "1v43FzwzAWSB9ThV1Pwpm6IF-pgjshsCw" },
+            'Trombone':  { name: 'ΤΡΟΜΠΟΝΙ', driveId: "1Nj0zE0M4WXs--FByF70HTeJxLzrQG-rd" },
+            'Trumpet':  { name: 'ΤΡΟΜΠΕΤΑ', driveId: "1sE-kqoF9pWeh0lmw7TQ5eiyPTMud0Wfg" },
+            'tuba':  { name: 'ΤΟΥΜΠΑ', driveId: "1vlyyyfIHO4GIHp60MlayHqR0ceg5cRj9" },
+            'vibraphone':  { name: 'ΜΕΤΑΛΛΟΦΩΝΟ', driveId: "1yy4Dq5K31ilVCx3rFK0GdPu8e7Q6Rvrq" },
+            'Xylophone':  { name: 'ΞΥΛΟΦΩΝΟ', driveId: "1Qw0NPoXu5JPJ8u2yhNrISTI7UVnDx48H" }
+        };
 
-        const container = document.getElementById('app');
+        const listContainer = document.getElementById('instrument-list');
 
-        photos.forEach(photo => {
-            const name = photo.split('.')[0]; // Παίρνει το όνομα χωρίς το .png
-            
+        // Δημιουργία των καρτών δυναμικά
+        Object.keys(instruments).forEach(id => {
+            const item = instruments[id];
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
-                <img src="photos/${photo}" alt="${name}" onerror="this.src='https://via.placeholder.com/70?text=Error'">
-                <span>${name}</span>
+                <img src="photos/${id}.png" class="instrument-img" onerror="this.src='https://via.placeholder.com/70?text=Instrument'">
+                <div class="card-info">
+                    <span>${item.name}</span>
+                    <div class="btn-row">
+                        <img src="photos/i.png" class="icon-btn" title="Πληροφορίες" onclick="window.open('${id}Info.html', '_blank')">
+                        <img src="photos/play.png" class="icon-btn" title="Ακούστε" onclick="openPlayer('${item.driveId}')">
+                    </div>
+                </div>
             `;
-            container.appendChild(card);
+            listContainer.appendChild(card);
         });
+
+        // Λειτουργίες του Video Player
+        function openPlayer(driveId) {
+            const modal = document.getElementById('video-modal');
+            const player = document.getElementById('player');
+            player.src = `https://drive.google.com/file/d/${driveId}/preview`;
+            modal.style.display = 'flex';
+        }
+
+        function closePlayer() {
+            const modal = document.getElementById('video-modal');
+            const player = document.getElementById('player');
+            player.src = ""; // Σταματάει το βίντεο όταν κλείνει
+            modal.style.display = 'none';
+        }
     </script>
 </body>
 </html>
