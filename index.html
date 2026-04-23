@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Τα Όργανά μου</title>
+    <title>Όργανα Μουσικής - Πλήρης Εφαρμογή</title>
     <style>
+        /* Βασικό στυλ για κινητά */
         body {
             font-family: -apple-system, system-ui, sans-serif;
             background-color: #f2f2f7;
@@ -12,8 +13,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-bottom: 40px;
+            padding-bottom: 30px;
         }
+
         header {
             background-color: #ffffff;
             width: 100%;
@@ -26,93 +28,119 @@
             top: 0;
             z-index: 1000;
         }
+
         .container {
             width: 95%;
-            max-width: 450px;
+            max-width: 500px;
             margin-top: 20px;
         }
+
+        /* Κάρτες Οργάνων */
         .card {
             background: white;
             border-radius: 15px;
-            padding: 12px;
-            margin-bottom: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .instrument-img {
-            width: 70px;
-            height: 70px;
+
+        .instrument-thumb {
+            width: 80px;
+            height: 80px;
             border-radius: 10px;
             object-fit: contain;
             margin-right: 15px;
-            background: #f9f9f9;
+            background-color: #f9f9f9;
         }
-        .card-info {
+
+        .info-section {
             flex-grow: 1;
         }
-        .card-info span {
-            display: block;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1c1c1e;
-            margin-bottom: 8px;
-        }
-        .btn-row {
-            display: flex;
-            gap: 12px;
-        }
-        .icon-btn {
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-        .icon-btn:active { transform: scale(0.9); }
 
-        /* Video Modal Layer */
-        #video-modal {
+        .instrument-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-btn {
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .action-btn:active {
+            transform: scale(0.8);
+        }
+
+        /* Το "Παράθυρο" (Modal) για Βίντεο και Info */
+        .overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            display: none;
+            background: rgba(0,0,0,0.9);
+            display: none; /* Κρυφό αρχικά */
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
+            z-index: 2000;
+            padding: 10px;
         }
-        #video-modal iframe {
-            width: 90%;
-            max-width: 560px;
-            aspect-ratio: 16/9;
+
+        /* Το περιεχόμενο μέσα στο παράθυρο */
+        .modal-content {
+            width: 100%;
+            max-width: 600px;
+            height: 80%;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
             border: none;
-            border-radius: 12px;
         }
-        .close-modal {
-            margin-top: 20px;
+
+        .close-bar {
             background: #ff3b30;
             color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
             font-weight: bold;
             cursor: pointer;
+            font-size: 1.1rem;
         }
     </style>
 </head>
 <body>
 
-    <header>Τα Όργανά μου</header>
+    <header>Τα Όργανα της Ορχήστρας</header>
 
-    <div class="container" id="instrument-list">
+    <div class="container" id="app-container">
         </div>
 
-    <div id="video-modal">
-        <iframe id="player" src="" allow="autoplay"></iframe>
-        <button class="close-modal" onclick="closePlayer()">Κλείσιμο ✕</button>
+    <div id="app-modal" class="overlay">
+        <div class="modal-content">
+            <iframe id="modal-frame" src=""></iframe>
+            <div class="close-bar" onclick="closeModal()">✕ ΚΛΕΙΣΙΜΟ & ΕΠΙΣΤΡΟΦΗ</div>
+        </div>
     </div>
 
     <script>
+        // Η λίστα με τα όργανα και τα IDs τους
         const instruments = {
             'violin': { name: 'ΒΙΟΛΙ', driveId: "1kzjmLde-86Zva_bWZqNZto2Ry4aXgk6J" },
             'viola':  { name: 'ΒΙΟΛΑ', driveId: "1Z05p9bGKMOALMWmb4twg-OEgu4rmqXhs" },
@@ -137,39 +165,44 @@
             'Xylophone':  { name: 'ΞΥΛΟΦΩΝΟ', driveId: "1Qw0NPoXu5JPJ8u2yhNrISTI7UVnDx48H" }
         };
 
-        const listContainer = document.getElementById('instrument-list');
+        const appContainer = document.getElementById('app-container');
 
-        // Δημιουργία των καρτών δυναμικά
-        Object.keys(instruments).forEach(id => {
-            const item = instruments[id];
+        // Δημιουργία των καρτών
+        Object.keys(instruments).forEach(key => {
+            const data = instruments[key];
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
-                <img src="photos/${id}.png" class="instrument-img" onerror="this.src='https://via.placeholder.com/70?text=Instrument'">
-                <div class="card-info">
-                    <span>${item.name}</span>
-                    <div class="btn-row">
-                        <img src="photos/i.png" class="icon-btn" title="Πληροφορίες" onclick="window.open('${id}Info.html', '_blank')">
-                        <img src="photos/play.png" class="icon-btn" title="Ακούστε" onclick="openPlayer('${item.driveId}')">
+                <img src="photos/${key}.png" class="instrument-thumb" onerror="this.src='https://via.placeholder.com/80?text=Instrument'">
+                <div class="info-section">
+                    <span class="instrument-title">${data.name}</span>
+                    <div class="button-group">
+                        <img src="photos/i.png" class="action-btn" onclick="openModal('${key}Info.html')">
+                        <img src="photos/play.png" class="action-btn" onclick="openModal('https://drive.google.com/file/d/${data.driveId}/preview')">
                     </div>
                 </div>
             `;
-            listContainer.appendChild(card);
+            appContainer.appendChild(card);
         });
 
-        // Λειτουργίες του Video Player
-        function openPlayer(driveId) {
-            const modal = document.getElementById('video-modal');
-            const player = document.getElementById('player');
-            player.src = `https://drive.google.com/file/d/${driveId}/preview`;
+        // Άνοιγμα του παραθύρου (είτε για Info είτε για Video)
+        function openModal(url) {
+            const modal = document.getElementById('app-modal');
+            const frame = document.getElementById('modal-frame');
+            frame.src = url;
             modal.style.display = 'flex';
+            // Εμποδίζουμε το σκρολάρισμα της πίσω σελίδας
+            document.body.style.overflow = 'hidden';
         }
 
-        function closePlayer() {
-            const modal = document.getElementById('video-modal');
-            const player = document.getElementById('player');
-            player.src = ""; // Σταματάει το βίντεο όταν κλείνει
+        // Κλείσιμο και καθαρισμός
+        function closeModal() {
+            const modal = document.getElementById('app-modal');
+            const frame = document.getElementById('modal-frame');
+            frame.src = ""; // Σταματάμε το βίντεο ή το περιεχόμενο
             modal.style.display = 'none';
+            // Επαναφέρουμε το σκρολάρισμα
+            document.body.style.overflow = 'auto';
         }
     </script>
 </body>
