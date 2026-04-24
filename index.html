@@ -103,42 +103,17 @@
             display: none;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Ξεκινάει από πάνω */
+            justify-content: flex-start;
             z-index: 2000;
         }
 
         .modal-content {
-            width: 100%; /* Full πλάτος στο κινητό */
-            height: 100%; /* Full ύψος */
+            width: 100%; 
+            height: 100%; 
             background: white;
             display: flex;
             flex-direction: column;
             border: none;
-        }
-
-        /* --- TABS (ΕΤΙΚΕΤΕΣ) --- */
-        .tabs-header {
-            display: flex;
-            background: #1a2a6c;
-            width: 100%;
-            border-bottom: 3px solid #b8860b;
-        }
-
-        .tab-link {
-            flex: 1;
-            padding: 15px 5px;
-            color: white;
-            text-align: center;
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
-            border-right: 1px solid rgba(255,255,255,0.1);
-            text-transform: uppercase;
-        }
-
-        .tab-link.active {
-            background: #b8860b;
-            color: black;
         }
 
         /* --- ΠΕΡΙΕΧΟΜΕΝΟ --- */
@@ -174,12 +149,6 @@
 
     <div id="modal" class="overlay">
         <div class="modal-content">
-            <div class="tabs-header" id="modal-tabs">
-                <div class="tab-link active" onclick="changeTab(this, 'info')">Πληροφορίες</div>
-                <div class="tab-link" onclick="changeTab(this, 'qa')">Ερωτήσεις</div>
-                <div class="tab-link" onclick="changeTab(this, 'rep')">Ρεπερτόριο</div>
-            </div>
-            
             <div class="iframe-container">
                 <iframe id="frame" src=""></iframe>
             </div>
@@ -224,7 +193,7 @@
             'Xylophone': '1Qw0NPoXu5JPJ8u2yhNrISTI7UVnDx48H'
         };
 
-        let currentInstrumentId = ""; // Κρατάμε ποιο όργανο είναι ανοιχτό
+        let currentInstrumentId = ""; 
 
         const listDiv = document.getElementById('list');
 
@@ -246,34 +215,16 @@
 
         function openPopup(id) {
             currentInstrumentId = id;
-            document.getElementById('modal-tabs').style.display = 'flex'; // Δείξε τα tabs
-            // Reset στο πρώτο tab
-            const firstTab = document.querySelector('.tab-link');
-            changeTab(firstTab, 'info');
-            
+            // Φορτώνει απευθείας το αρχείο Info χωρίς να χρειάζονται tabs
+            document.getElementById('frame').src = `${id}Info.html`;
             document.getElementById('modal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
 
         function openVideo(id) {
-            document.getElementById('modal-tabs').style.display = 'none'; // Κρύψε τα tabs στο βίντεο
             document.getElementById('frame').src = `https://drive.google.com/file/d/${driveIds[id]}/preview`;
             document.getElementById('modal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
-        }
-
-        function changeTab(element, type) {
-            // Αλλαγή εμφάνισης κουμπιών
-            document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('active'));
-            element.classList.add('active');
-
-            // Αλλαγή URL στο iframe ανάλογα με το tab
-            let url = "";
-            if(type === 'info') url = `${currentInstrumentId}Info.html`;
-            if(type === 'qa') url = `${currentInstrumentId}QA.html`;
-            if(type === 'rep') url = `${currentInstrumentId}Rep.html`;
-            
-            document.getElementById('frame').src = url;
         }
 
         function closeModal() {
