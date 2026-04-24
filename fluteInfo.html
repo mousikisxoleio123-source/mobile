@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Φλάουτο - Πληροφορίες & Κουίζ</title>
+    <title>Φλάουτο - Πληροφορίες, Κουίζ & Ρεπερτόριο</title>
     <style>
         :root {
             --primary: #5c7cfa;
@@ -12,7 +12,6 @@
             --bg-end: #e0e7ff;
             --text-main: #2c3e50;
             --card-bg: rgba(255, 255, 255, 0.9);
-            /* Δυναμικό μέγεθος γραμματοσειράς */
             --dynamic-font-size: 1.1rem;
         }
 
@@ -30,18 +29,16 @@
         }
 
         .container {
-            max-width: 850px;
+            max-width: 1400px;
             width: 100%;
             background: var(--card-bg);
             padding: 30px;
             border-radius: 25px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             border: 1px solid rgba(255,255,255,0.5);
-            /* Εφαρμογή δυναμικού μεγέθους */
             font-size: var(--dynamic-font-size);
         }
 
-        /* Μπάρα ελέγχου */
         .controls-bar {
             display: flex;
             justify-content: space-between;
@@ -79,7 +76,6 @@
 
         .font-btn:hover { background: #000; color: #fff; }
 
-        /* Στρογγυλό κουμπί ήχου */
         .speak-btn-round {
             width: 45px;
             height: 45px;
@@ -96,11 +92,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
-        .speak-btn-round:hover {
-            background: #000;
-            color: #fff;
-            transform: scale(1.1);
-        }
+        .speak-btn-round:hover { background: #000; color: #fff; transform: scale(1.1); }
 
         h1 {
             color: var(--primary);
@@ -108,7 +100,6 @@
             border-bottom: 3px solid #dee2e6;
             padding-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 1px;
             font-size: 2em;
         }
 
@@ -126,30 +117,52 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 0.9em;
-            transition: 0.3s;
             background: white;
             color: var(--primary);
+            transition: 0.3s;
         }
 
-        .tab-btn.active {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 12px rgba(92, 124, 250, 0.3);
+        .tab-btn.active { background: var(--primary); color: white; }
+
+        .content-section { display: none; animation: fadeIn 0.4s ease; }
+        .content-section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .video-grid {
+            display: flex;
+            gap: 30px;
+            width: 100%;
+            margin-top: 10px;
         }
 
-        .content-section {
-            display: none;
-            animation: fadeIn 0.4s ease;
+        .video-container {
+            flex: 1.33;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .content-section.active {
-            display: block;
+        .video-container iframe {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 20px;
+            border: 4px solid var(--primary);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            cursor: pointer;
         }
+
+        .video-overlay.hidden { display: none; }
 
         .info-item {
             background: white;
@@ -158,51 +171,36 @@
             border-left: 6px solid var(--accent);
             border-radius: 12px;
             line-height: 1.6;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
 
-        .info-item b { 
-            color: var(--primary); 
-            display: block; 
-            margin-bottom: 0.5em; 
-            font-size: 1.2em; 
-        }
+        .info-item b { color: var(--primary); display: block; margin-bottom: 0.5em; font-size: 1.2em; }
 
-        .qa-grid {
-            display: grid;
-            gap: 15px;
-        }
+        .qa-grid { display: grid; gap: 15px; }
 
         .qa-card {
             background: #f8faff;
             padding: 1.2em;
             border-radius: 15px;
+            margin-bottom: 15px;
             border: 1px solid #e0e7ff;
         }
 
-        .question { 
-            font-weight: bold; 
-            color: var(--primary); 
-            margin-bottom: 0.5em; 
-            font-size: 1.1em; 
-        }
-
-        .answer { 
-            color: #495057; 
-            line-height: 1.5; 
-            border-top: 1px dashed #ced4da; 
-            padding-top: 10px; 
-        }
+        .question { font-weight: bold; color: var(--primary); margin-bottom: 0.5em; }
+        .answer { color: #495057; border-top: 1px dashed #ced4da; padding-top: 0.5em; }
 
         .back-home {
             background: #ff6b6b;
             color: white;
             border: none;
-            padding: 12px 25px;
+            padding: 10px 20px;
             border-radius: 30px;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.2s;
+        }
+
+        @media (max-width: 1024px) {
+            .video-grid { flex-direction: column; }
+            .container { max-width: 95%; }
         }
     </style>
 </head>
@@ -210,7 +208,7 @@
 
     <div class="container">
         <div class="controls-bar">
-            <button class="back-home" onclick="window.close()">✖ Κλείσιμο & Επιστροφή</button>
+            <button class="back-home" onclick="window.close()">✖ Κλείσιμο</button>
             
             <div class="right-controls">
                 <div class="font-switcher">
@@ -218,6 +216,7 @@
                     <button class="font-btn" onclick="updateFont(1.4)" style="font-size: 1.2em;">Α</button>
                     <button class="font-btn" onclick="updateFont(1.8)" style="font-size: 1.4em;">Α</button>
                 </div>
+                
                 <button class="speak-btn-round" title="Αυτόματη Αφήγηση" onclick="handleSpeak()">🔊</button>
             </div>
         </div>
@@ -225,8 +224,9 @@
         <h1>Φλάουτο</h1>
 
         <div class="tabs-nav">
-            <button class="tab-btn active" onclick="openTab(event, 'info-tab')">Πληροφορίες</button>
-            <button class="tab-btn" onclick="openTab(event, 'quiz-tab')">Ερωτήσεις & Απαντήσεις</button>
+            <button class="tab-btn active" id="btn-info" onclick="openTab(event, 'info-tab')">Πληροφορίες</button>
+            <button class="tab-btn" id="btn-quiz" onclick="openTab(event, 'quiz-tab')">Ερωτήσεις & Απαντήσεις</button>
+            <button class="tab-btn" id="btn-repertoire" onclick="openTab(event, 'repertoire-tab')">Ρεπερτόριο</button>
         </div>
 
         <div id="info-tab" class="content-section active">
@@ -260,22 +260,70 @@
                 <div class="qa-card"><div class="question">15. Πώς πρέπει να καθαρίζω το φλάουτό μου;</div><div class="answer">Μετά από κάθε φορά που παίζεις, πρέπει να χρησιμοποιείς τη ράβδο καθαρισμού με ένα μαλακό πανί για να σκουπίζεις την υγρασία από το εσωτερικό του.</div></div>
             </div>
         </div>
+
+        <div id="repertoire-tab" class="content-section">
+            <div class="video-grid">
+                <div class="video-container">
+                    <div class="video-overlay" onclick="playVideo(1)"></div>
+                    <iframe id="video1" src="https://drive.google.com/file/d/1vbLAN7m8vmZrcng8vAbz3BawvmJvmz1l/preview" allow="autoplay"></iframe>
+                </div>
+                <div class="video-container">
+                    <div class="video-overlay" onclick="playVideo(2)"></div>
+                    <iframe id="video2" src="https://drive.google.com/file/d/1fOYRinMKcAj0AKIrfKtf-xqNcnG_DmzN/preview" allow="autoplay"></iframe>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
+        document.addEventListener('keydown', function(event) {
+            const key = event.key.toLowerCase();
+            if (key === 'r' || key === 'ρ') {
+                const repertoireBtn = document.getElementById('btn-repertoire');
+                const fakeEvent = { currentTarget: repertoireBtn };
+                openTab(fakeEvent, 'repertoire-tab');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
+        function playVideo(num) {
+            const vid1 = document.getElementById('video1');
+            const vid2 = document.getElementById('video2');
+            const overlays = document.querySelectorAll('.video-overlay');
+            if (num === 1) {
+                resetIframe(vid2);
+                overlays[0].classList.add('hidden');
+                overlays[1].classList.remove('hidden');
+            } else {
+                resetIframe(vid1);
+                overlays[1].classList.add('hidden');
+                overlays[0].classList.remove('hidden');
+            }
+        }
+
+        function resetIframe(iframe) {
+            const src = iframe.src;
+            iframe.src = '';
+            iframe.src = src;
+        }
+
+        function stopAllVideos() {
+            resetIframe(document.getElementById('video1'));
+            resetIframe(document.getElementById('video2'));
+            document.querySelectorAll('.video-overlay').forEach(ov => ov.classList.remove('hidden'));
+        }
+
         function openTab(evt, tabName) {
             var i, content, tablinks;
             content = document.getElementsByClassName("content-section");
-            for (i = 0; i < content.length; i++) {
-                content[i].classList.remove("active");
-            }
+            for (i = 0; i < content.length; i++) { content[i].classList.remove("active"); }
             tablinks = document.getElementsByClassName("tab-btn");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].classList.remove("active");
-            }
+            for (i = 0; i < tablinks.length; i++) { tablinks[i].classList.remove("active"); }
+            
             document.getElementById(tabName).classList.add("active");
             evt.currentTarget.classList.add("active");
-            // Σταμάτημα ομιλίας κατά την αλλαγή καρτέλας
+
+            stopAllVideos();
             window.speechSynthesis.cancel();
         }
 
@@ -289,24 +337,14 @@
                 synth.cancel();
                 return;
             }
-
             const activeTab = document.querySelector('.content-section.active');
-            const textToSpeak = activeTab.innerText;
-            const utterThis = new SpeechSynthesisUtterance(textToSpeak);
+            const utterThis = new SpeechSynthesisUtterance(activeTab.innerText);
             utterThis.lang = 'el-GR';
-
-            const voices = synth.getVoices();
-            // Προσπάθεια εύρεσης ελληνικής φωνής
-            let greekVoice = voices.find(v => (v.lang.includes('el')) && (v.name.includes('Google') || v.name.includes('Female') || v.name.includes('Στέφανος') || v.name.includes('Melina')));
-            
-            if (greekVoice) utterThis.voice = greekVoice;
-            utterThis.pitch = 1.0;
+            utterThis.pitch = 1.2;
             utterThis.rate = 0.9;
-
             synth.speak(utterThis);
         }
 
-        // Φόρτωση φωνών
         window.speechSynthesis.getVoices();
     </script>
 </body>
